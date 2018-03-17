@@ -2,8 +2,6 @@ require 'sinatra'
 require 'exifr/jpeg'
 require 'json'
 
-require_relative 'app.rb'
-
 set :token, File.read('./TOKEN').strip
 set :static, true
 set :root, File.dirname(__FILE__)
