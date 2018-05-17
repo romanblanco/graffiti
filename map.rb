@@ -31,6 +31,8 @@ def photo_gps_list
         "image": File.join(photos_url, photo),
         "url": File.join(photos_url, photo),
         "date": photo_exif.exif.date_time_original,
+        "gps_longitude": photo_exif.gps.longitude,
+        "gps_latitude": photo_exif.gps.latitude,
         "marker-symbol": "art-gallery",
         "marker-color": "#000000",
         "marker-size": "medium",

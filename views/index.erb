@@ -25,7 +25,8 @@
         var popupContent = '<a target="_blank" class="popup" href="' + feature.properties.url + '">' +
                                '<img src="' + feature.properties.image + '" />' +
                            '</a>' +
-                           '<p>Date: ' + feature.properties.date + '</p>';
+                           '<p>Date: ' + feature.properties.date + '</p>' +
+                           '<p>GPS: <a href="https://www.google.com/maps/search/?api=1&query='+feature.properties.gps_latitude+','+ feature.properties.gps_longitude + '">maps</a></p>';
         // http://leafletjs.com/reference.html#popup
         marker.bindPopup(popupContent,{
             closeButton: false,
