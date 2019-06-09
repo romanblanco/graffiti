@@ -21,7 +21,7 @@ get "/assets/photos/:file" do |file|
 end
 
 def photo_gps_list
-  table = CSV.open("graffiti.csv", headers: true).map(&:to_h)
+  table = CSV.open("assets/graffiti.csv", headers: true).map(&:to_h)
   olc = PlusCodes::OpenLocationCode.new
   photos_url = '/assets/photos/'
   result = table.map do |photo|
