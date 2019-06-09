@@ -1,5 +1,7 @@
 require 'sinatra'
 require 'exifr/jpeg'
+require 'csv'
+require 'plus_codes/open_location_code'
 require 'json'
 
 set :token, File.read('./TOKEN').strip
@@ -19,25 +21,26 @@ get "/assets/photos/:file" do |file|
 end
 
 def photo_gps_list
-  photos_dir = File.absolute_path('assets/photos/')
+  table = CSV.open("graffiti.csv", headers: true).map(&:to_h)
+  olc = PlusCodes::OpenLocationCode.new
   photos_url = '/assets/photos/'
-  photos = Dir.entries(photos_dir).select { |filename| filename if filename.end_with?('jpg') }
-  result = photos.map do |photo|
-    photo_exif = EXIFR::JPEG.new(photos_dir + '/' + photo)
+  result = table.map do |photo|
     {
       type: 'Feature',
-      "geometry": { "type": "Point", "coordinates": [photo_exif.gps.longitude, photo_exif.gps.latitude]},
+      "geometry": { "type": "Point", "coordinates": [photo["longitude"], photo["latitude"]]},
       "properties": {
-        "image": File.join(photos_url, photo),
-        "url": File.join(photos_url, photo),
-        "date": photo_exif.exif.date_time_original,
-        "gps_longitude": photo_exif.gps.longitude,
-        "gps_latitude": photo_exif.gps.latitude,
+        "image": File.join(photos_url, photo["filename"]),
+        "ipfs": photo["ipfs"],
+        "url": File.join(photos_url, photo["filename"]),
+        "date": photo["date"],
+        "gps_longitude": photo["longitude"],
+        "gps_latitude": photo["latitude"],
+        "plus": olc.encode(Float(photo["latitude"]), Float(photo["longitude"]), 16),
         "marker-symbol": "art-gallery",
         "marker-color": "#000000",
         "marker-size": "medium",
       }
-    } unless photo_exif.gps.nil?
+    }
   end
   result.compact.to_json
 end
