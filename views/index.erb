@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset=utf-8 />
-    <title>EXIF GPS map</title>
+    <title>graffiti</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.js'></script>
     <link href='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.css' rel='stylesheet' />
@@ -13,30 +13,51 @@
     </style>
   </head>
   <body>
-    <div id='map'/>
+    <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/leaflet.markercluster.js'></script>
+    <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/MarkerCluster.css' rel='stylesheet' />
+    <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/MarkerCluster.Default.css' rel='stylesheet' />
+    <div id='map'></div>
     <script>
       L.mapbox.accessToken = "<%= token %>";
       var geoJson = <%= data %>;
-      var map = L.mapbox.map('map', 'mapbox.streets').setView([49.223, 16.605], 12);
-      var myLayer = L.mapbox.featureLayer().addTo(map);
-      myLayer.on('layeradd', function(e) {
-        var marker = e.layer,
-            feature = marker.feature;
-        var popupContent = '<a target="_blank" class="popup" href="' + feature.properties.url + '">' +
-                               '<img src="' + feature.properties.image + '" />' +
-                           '</a>' +
-                           '<p>Date: ' + feature.properties.date + '</p>' +
-                           '<p>IPFS: <a href="https://ipfs.io/ipfs/' + feature.properties.ipfs + '">ipfs.io</a></p>' +
-                           '<p>Plus: <a href="https://www.google.com/maps/search/?api=1&query='+feature.properties.plus+'">maps ('+ feature.properties.plus +')</a></p>' +
-                           '<p>GPS: <a href="https://www.google.com/maps/search/?api=1&query='+feature.properties.gps_latitude+','+ feature.properties.gps_longitude + '">maps</a></p>';
-        // http://leafletjs.com/reference.html#popup
-        marker.bindPopup(popupContent,{
-            closeButton: false,
-            minWidth: 320
+      var map = L.mapbox.map('map')
+          .setView([0, 0], 2)
+          .addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v11'));
+
+      var markers = new L.MarkerClusterGroup();
+      var myPositionMarkerGroup = new L.MarkerClusterGroup();
+
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          var myPositionMarker = new L.LatLng(position.coords.latitude, position.coords.longitude);
+          var myPositionMarkerParams = {
+            icon: L.mapbox.marker.icon({'marker-symbol': 'marker', 'marker-color': 'FF0000'}),
+            title: ''
+          }
+          myPositionMarkerGroup.addLayer(L.marker(myPositionMarker, myPositionMarkerParams));
+          map.addLayer(myPositionMarkerGroup);
         });
-      });
-      // Add features to the map
-      myLayer.setGeoJSON(geoJson);
+      }
+
+      //console.log(geoJson[0]);
+      for (var i = 0; i < geoJson.length; i++) {
+        var a = geoJson[i];
+        var popupContent = '<a target="_blank" class="popup" href="' + a.properties.url + '">' +
+                               '<img src="' + a.properties.image + '" />' +
+                           '</a>' +
+                           '<p>Date: ' + a.properties.date + '</p>' +
+                           '<p>IPFS: <a href="https://ipfs.io/ipfs/' + a.properties.ipfs + '">ipfs.io</a></p>' +
+                           '<p>Plus: <a href="https://www.google.com/maps/search/?api=1&query='+ encodeURIComponent(a.properties.plus)+'">maps ('+ a.properties.plus +')</a></p>' +
+                           '<p>GPS: <a href="https://www.google.com/maps/search/?api=1&query='+a.properties.gps_latitude+','+ a.properties.gps_longitude + '">maps</a></p>';
+        var marker = L.marker(new L.LatLng(Number(a["geometry"]["coordinates"][1]), Number(a["geometry"]["coordinates"][0])), {
+            icon: L.mapbox.marker.icon({'marker-symbol': a.properties["marker-symbol"], 'marker-color': '0044FF'}),
+            title: popupContent
+        });
+        marker.bindPopup(popupContent, {minWidth: 320});
+        markers.addLayer(marker);
+      }
+
+      map.addLayer(markers);
     </script>
   </body>
 </html>
