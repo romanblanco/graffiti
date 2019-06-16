@@ -18,3 +18,15 @@ gem install bundler
 bundle install
 bundle exec ruby map.rb -o 0.0.0.0
 ```
+
+`http://0.0.0.0:4567/`
+
+![index](/index.png "index")
+
+`http://0.0.0.0:4567/detail/8FXR5JW`
+
+![detail](/detail.png "detail")
+
+`http://0.0.0.0:4567/api/8FXR5JW`
+
+![api](/api.png "api")
