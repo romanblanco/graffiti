@@ -1,0 +1,15 @@
+https://explore.ipld.io/#/explore/QmdWeEuqA6gHACFGYd8yfiwyX8QGrQ7GzxRDdQPxf3VZxA
+
+<table border=1>
+  <% ipfs.each do |name| %>
+    <tr>
+      <td><form method="post" action="/getFromIpfs"><input type="hidden" name="ipfs_content" value="<%= name[:ipfs] %>"><input class='btn btn-primary' type='submit' value='Add To Cart'></form></td>
+      <td><%= name[:ipfs] %></td>
+      <td><%= name[:size] %></td>
+      <td><%= name[:date] %></td>
+      <td><%= name[:latitude] %></td>
+      <td><%= name[:longitude] %></td>
+      <td><%= name[:surface] %></td>
+    </tr>
+  <% end %>
+</table>
