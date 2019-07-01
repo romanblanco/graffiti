@@ -11,22 +11,58 @@ set :static, true
 set :root, File.dirname(__FILE__)
 set :public_folder, Proc.new { File.join(root, "assets/photos/") }
 
+class Resource
+  attr_accessor :graffiti_data
+  attr_accessor :images_data
+
+  def initialize
+    @ipfs = IPFS::Client.default # uses localhost and port 5001
+    @images_nodes = [
+      'QmdWeEuqA6gHACFGYd8yfiwyX8QGrQ7GzxRDdQPxf3VZxA',
+    ]
+    @graffiti_files = [
+      'QmeNNGcqg12BWoyHWJ1Aa6WaeTrct5WHjPpQ1LUGip7se1',
+    ]
+    @graffiti_data = []
+    @images_data = []
+    load_resource
+  end
+
+  private
+
+  def load_resource
+    # load information about images available from ipfs nodes
+    @images_nodes.each do |node|
+      @images_data.push(
+        @ipfs.ls(node).map do |node|
+          node.links.map { |link| { ipfs: link.hashcode, size: link.size } }
+        end.first)
+    end
+    # load data describing graffiti images
+    @graffiti_files.each do |file|
+      @graffiti_data.push(CSV.parse(@ipfs.cat(file), headers: true).map(&:to_h)).first
+    end
+  end
+end
+
+@@resource = Resource.new
+
 get '/' do
   erb :index, :locals => {
-    :data => photo_gps_list('all'),
+    :data => markers('all'),
     :token => settings.token
   }
 end
 
 get '/detail/?:region?' do |r|
   erb :detail, :locals => {
-    :data => photo_gps_list(params['region']),
+    :data => markers(params['region']),
     :token => settings.token
   }
 end
 
 get '/api/?:region?' do |r|
-  json(export(params['region']))
+  json(api(params['region']))
 end
 
 get "/assets/photos/:file" do |file|
@@ -44,6 +80,7 @@ get '/download' do
 end
 
 post "/getFromIpfs" do
+  # TODO: pin to ipfs rather than download
   file = params['ipfs_content']
   filename = file + '.jpg'
   file_path = 'assets/photos/'
@@ -53,6 +90,7 @@ post "/getFromIpfs" do
 end
 
 def download
+  # TODO: pin to ipfs rather than download
   client = IPFS::Client.default # => uses localhost and port 5001
   content = client.ls 'QmdWeEuqA6gHACFGYd8yfiwyX8QGrQ7GzxRDdQPxf3VZxA'
   ipfs_content = content.map { |node| node.links.map { |link| {ipfs: link.hashcode, size: link.size} } }.first
@@ -77,48 +115,58 @@ def download
   result
 end
 
-def photo_gps_list(region)
-  olc = PlusCodes::OpenLocationCode.new
-  client = IPFS::Client.default # => uses localhost and port 5001
-  table = CSV.parse(client.cat('QmeNNGcqg12BWoyHWJ1Aa6WaeTrct5WHjPpQ1LUGip7se1'), headers: true).map(&:to_h)
+def markers(region)
   photos_url = '/assets/photos/'
-  all = region == "all"
-  result = table.map do |photo|
-    plus_code = olc.encode(Float(photo["latitude"]), Float(photo["longitude"]), 16)
+  api(region).map do |photo|
     {
       type: 'Feature',
-      "geometry": { "type": "Point", "coordinates": [photo["longitude"], photo["latitude"]]},
+      "geometry": { "type": "Point", "coordinates": [photo[:longitude], photo[:latitude]]},
       "properties": {
-        "image": File.join(photos_url, photo["ipfs"]),
-        "ipfs": photo["ipfs"],
-        "surface": photo["surface"],
-        "url": File.join(photos_url, photo["ipfs"]),
-        "date": photo["date"],
-        "gps_longitude": photo["longitude"],
-        "gps_latitude": photo["latitude"],
-        "plus": plus_code,
+        "image": File.join(photos_url, photo[:ipfs]),
+        "ipfs": photo[:ipfs],
+        "surface": photo[:surface],
+        "url": File.join(photos_url, photo[:ipfs]),
+        "date": photo[:date],
+        "gps_longitude": photo[:longitude],
+        "gps_latitude": photo[:latitude],
+        "plus": photo[:plus_code],
         "marker-symbol": "art-gallery",
-        "marker-color": photo["surface"] != nil ? "#00FF00" : "#000000",
+        "marker-color": photo[:surface] != nil ? "#00FF00" : "#000000",
         "marker-size": "medium",
       }
-    } if all or plus_code.match("^#{region}")
-  end
-  result.compact.to_json
+    } if photo[:plus_code] != ''
+  end.compact.to_json
 end
 
-def export(region)
-  client = IPFS::Client.default # => uses localhost and port 5001
-  all = region == "all"
-  starts_with_region = "^#{region}"
+def api(search)
   olc = PlusCodes::OpenLocationCode.new
-  table = CSV.parse(client.cat('QmeNNGcqg12BWoyHWJ1Aa6WaeTrct5WHjPpQ1LUGip7se1'), headers: true).map(&:to_h)
-  table.map { |photo|
-    latitude = Float(photo["latitude"])
-    longitude = Float(photo["longitude"])
-    photo["plus_code"] = olc.encode(latitude, longitude, 16)
-    photo["latitude"] = latitude
-    photo["longitude"] = longitude
-    photo["url"] = "https://ipfs.io/ipfs/#{photo["ipfs"]}"
-  }
-  table.map { |record| record if all or record["plus_code"].match(starts_with_region) }.compact
+  images = @@resource.images_data.flatten
+  descriptions = @@resource.graffiti_data.flatten
+  all = search == "all"
+  starts_with_region = "^#{search}".upcase
+  result = images.map do |image|
+    image_details = descriptions.select do |description|
+      image[:ipfs] == description['ipfs']
+    end
+    image[:url] = "https://ipfs.io/ipfs/#{image[:ipfs]}"
+    if !image_details.empty?
+      data = image_details.first
+      image[:date] = data['date']
+      image[:latitude] = data['latitude']
+      image[:longitude] = data['longitude']
+      image[:plus_code] = olc.encode(
+        Float(data['latitude']),
+        Float(data['longitude']),
+        16)
+      image[:surface] = data["surface"]
+    else
+      image[:date] = ''
+      image[:latitude] = ''
+      image[:longitude] = ''
+      image[:plus_code] = ''
+      image[:surface] = ''
+    end
+    image if all or image[:plus_code].match(starts_with_region)
+  end.compact.sort_by { |image| image[:plus_code] }
+  result
 end
