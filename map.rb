@@ -1,10 +1,9 @@
 require 'sinatra'
 require 'sinatra/json'
-require 'exifr/jpeg'
-require 'csv'
+require 'ipfs/client'
 require 'plus_codes/open_location_code'
 require 'json'
-require 'ipfs/client'
+require 'csv'
 
 set :token, File.read('./TOKEN').strip
 set :static, true
@@ -12,6 +11,7 @@ set :root, File.dirname(__FILE__)
 set :public_folder, Proc.new { File.join(root, "assets/photos/") }
 
 class Resource
+  attr_accessor :ipfs
   attr_accessor :graffiti_data
   attr_accessor :images_data
 
@@ -68,74 +68,8 @@ end
 get "/assets/photos/:file" do |file|
   filename = file + '.jpg'
   file_path = 'assets/photos/'
-  client = IPFS::Client.default # => uses localhost and port 5001
-  File.write(file_path + filename, client.cat(file))
+  File.write(file_path + filename, @@resource.ipfs.cat(file))
   send_file File.join(File.absolute_path(file_path) + '/' + filename)
-end
-
-get '/download' do
-  erb :download, :locals => {
-    :ipfs => download
-  }
-end
-
-post "/getFromIpfs" do
-  # TODO: pin to ipfs rather than download
-  file = params['ipfs_content']
-  filename = file + '.jpg'
-  file_path = 'assets/photos/'
-  client = IPFS::Client.default # => uses localhost and port 5001
-  File.write(file_path + filename, client.cat(file))
-  redirect '/download'
-end
-
-def download
-  # TODO: pin to ipfs rather than download
-  client = IPFS::Client.default # => uses localhost and port 5001
-  content = client.ls 'QmdWeEuqA6gHACFGYd8yfiwyX8QGrQ7GzxRDdQPxf3VZxA'
-  ipfs_content = content.map { |node| node.links.map { |link| {ipfs: link.hashcode, size: link.size} } }.first
-  table = CSV.parse(client.cat('QmeNNGcqg12BWoyHWJ1Aa6WaeTrct5WHjPpQ1LUGip7se1'), headers: true).map(&:to_h)
-
-  result = ipfs_content.map { |ipfs|
-    tbl = table.select { |tbl| tbl["ipfs"] == ipfs[:ipfs] }
-    if !tbl.empty?
-      data = tbl.first
-      ipfs[:date] = data["date"]
-      ipfs[:latitude] = data["latitude"]
-      ipfs[:longitude] = data["longitude"]
-      ipfs[:surface] = data["surface"]
-    else
-      ipfs[:date] = ""
-      ipfs[:latitude] = ""
-      ipfs[:longitude] = ""
-      ipfs[:surface] = ""
-    end
-    ipfs
-  }
-  result
-end
-
-def markers(region)
-  photos_url = '/assets/photos/'
-  api(region).map do |photo|
-    {
-      type: 'Feature',
-      "geometry": { "type": "Point", "coordinates": [photo[:longitude], photo[:latitude]]},
-      "properties": {
-        "image": File.join(photos_url, photo[:ipfs]),
-        "ipfs": photo[:ipfs],
-        "surface": photo[:surface],
-        "url": File.join(photos_url, photo[:ipfs]),
-        "date": photo[:date],
-        "gps_longitude": photo[:longitude],
-        "gps_latitude": photo[:latitude],
-        "plus": photo[:plus_code],
-        "marker-symbol": "art-gallery",
-        "marker-color": photo[:surface] != nil ? "#00FF00" : "#000000",
-        "marker-size": "medium",
-      }
-    } if photo[:plus_code] != ''
-  end.compact.to_json
 end
 
 def api(search)
@@ -169,4 +103,27 @@ def api(search)
     image if all or image[:plus_code].match(starts_with_region)
   end.compact.sort_by { |image| image[:plus_code] }
   result
+end
+
+def markers(region)
+  photos_url = '/assets/photos/'
+  api(region).map do |photo|
+    {
+      type: 'Feature',
+      "geometry": { "type": "Point", "coordinates": [photo[:longitude], photo[:latitude]]},
+      "properties": {
+        "image": File.join(photos_url, photo[:ipfs]),
+        "ipfs": photo[:ipfs],
+        "surface": photo[:surface],
+        "url": File.join(photos_url, photo[:ipfs]),
+        "date": photo[:date],
+        "gps_longitude": photo[:longitude],
+        "gps_latitude": photo[:latitude],
+        "plus": photo[:plus_code],
+        "marker-symbol": "art-gallery",
+        "marker-color": photo[:surface] != nil ? "#00FF00" : "#000000",
+        "marker-size": "medium",
+      }
+    } if photo[:plus_code] != ''
+  end.compact.to_json
 end
