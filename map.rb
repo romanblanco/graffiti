@@ -3,7 +3,9 @@ require 'sinatra/json'
 require 'ipfs/client'
 require 'plus_codes/open_location_code'
 require 'json'
+require 'exifr/jpeg'
 require 'csv'
+require 'geocoder'
 
 set :token, File.read('./TOKEN').strip
 set :static, true
@@ -19,6 +21,7 @@ class Resource
     @ipfs = IPFS::Client.default # uses localhost and port 5001
     @images_nodes = [
       'QmdWeEuqA6gHACFGYd8yfiwyX8QGrQ7GzxRDdQPxf3VZxA',
+      'QmYVGFdAxxXYK2E8Ub8Xoe69YgAx19utAQZ639noYCvNxU',
     ]
     @graffiti_files = [
       'QmeNNGcqg12BWoyHWJ1Aa6WaeTrct5WHjPpQ1LUGip7se1',
@@ -31,38 +34,89 @@ class Resource
   private
 
   def load_resource
+    images_data = []
+    graffiti_data = []
+
     # load information about images available from ipfs nodes
     @images_nodes.each do |node|
-      @images_data.push(
+      images_data.push(
         @ipfs.ls(node).map do |node|
           node.links.map { |link| { ipfs: link.hashcode, size: link.size } }
         end.first)
+      @images_data = images_data.flatten.uniq
     end
+
     # load data describing graffiti images
     @graffiti_files.each do |file|
-      @graffiti_data.push(CSV.parse(@ipfs.cat(file), headers: true).map(&:to_h)).first
+      graffiti_data.push(CSV.parse(@ipfs.cat(file), headers: true).map(&:to_h)).first
+      @graffiti_data = graffiti_data.flatten
     end
+    @graffiti_data.map! { |hash|
+      hash.inject({}) { |memo, (k, v)| memo[k.to_sym] = v; memo }
+    }
+
+    undescribed = @images_data.map do |undescribed|
+      undescribed if @graffiti_data.select do |image|
+        image[:ipfs] == undescribed[:ipfs]
+      end.empty?
+    end.compact
+    undescribed.each { |image|
+      File.write("assets/tmp/#{image[:ipfs]}.jpg", @ipfs.cat(image[:ipfs]))
+    }
+    ipfs_download = undescribed.map { |image|
+      exif = EXIFR::JPEG.new("assets/tmp/#{image[:ipfs]}.jpg")
+      { :ipfs => image[:ipfs],
+        :date =>  exif.date_time.to_s,
+        :filename => nil,
+        :longitude => exif&.gps&.longitude.to_s,
+        :latitude => exif&.gps&.latitude.to_s }
+    }
+    ipfs_download.each { |img| @graffiti_data.push(img) }
   end
 end
 
 @@resource = Resource.new
 
 get '/' do
-  erb :index, :locals => {
-    :data => markers('all'),
+  erb :cluster, :locals => {
+    :data => markers(api(:type => :all)),
     :token => settings.token
   }
 end
 
 get '/detail/?:region?' do |r|
   erb :detail, :locals => {
-    :data => markers(params['region']),
+    :data => markers(api(:type => :plus,
+                         :request => params['region'])),
     :token => settings.token
   }
 end
 
-get '/api/?:region?' do |r|
-  json(api(params['region']))
+get '/city/?:city?' do |r|
+  erb :cluster, :locals => {
+    :data => markers(api(
+      :type => :city,
+      :request => Geocoder.search(params['city']).first.data["boundingbox"])),
+    :token => settings.token
+  }
+end
+
+get '/api/?:ipfs?' do |r|
+  if params.empty?
+    json(api(:type => :all))
+  else
+    json(api(:type => :ipfs, :request => params['ipfs']))
+  end
+end
+
+get '/api/city/?:city?' do |r|
+  json(api(
+    :type => :city,
+    :request => Geocoder.search(params['city']).first.data["boundingbox"]))
+end
+
+get '/api/plus/?:region?' do |r|
+  json(api(:type => :plus, :request => params['region']))
 end
 
 get "/assets/photos/:file" do |file|
@@ -72,27 +126,24 @@ get "/assets/photos/:file" do |file|
   send_file File.join(File.absolute_path(file_path) + '/' + filename)
 end
 
-def api(search)
+def api(search_params)
   olc = PlusCodes::OpenLocationCode.new
-  images = @@resource.images_data.flatten
-  descriptions = @@resource.graffiti_data.flatten
-  all = search == "all"
-  starts_with_region = "^#{search}".upcase
-  result = images.map do |image|
-    image_details = descriptions.select do |description|
-      image[:ipfs] == description['ipfs']
+  result = @@resource.images_data.map do |image|
+    image_details = @@resource.graffiti_data.select do |description|
+      image[:ipfs] == description[:ipfs]
     end
     image[:url] = "https://ipfs.io/ipfs/#{image[:ipfs]}"
-    if !image_details.empty?
+    if !image_details.empty? && !(image_details.first[:latitude] == "" ||
+                                  image_details.first[:longitude] == "")
       data = image_details.first
-      image[:date] = data['date']
-      image[:latitude] = data['latitude']
-      image[:longitude] = data['longitude']
+      image[:date] = data[:date]
+      image[:latitude] = data[:latitude]
+      image[:longitude] = data[:longitude]
       image[:plus_code] = olc.encode(
-        Float(data['latitude']),
-        Float(data['longitude']),
+        Float(data[:latitude]),
+        Float(data[:longitude]),
         16)
-      image[:surface] = data["surface"]
+      image[:surface] = data[:surface]
     else
       image[:date] = ''
       image[:latitude] = ''
@@ -100,14 +151,36 @@ def api(search)
       image[:plus_code] = ''
       image[:surface] = ''
     end
-    image if all or image[:plus_code].match(starts_with_region)
+    image if search(image, search_params)
   end.compact.sort_by { |image| image[:plus_code] }
   result
 end
 
-def markers(region)
+def search(image, params)
+  case params[:type]
+  when :all
+    true
+  when :ipfs
+    image[:ipfs] == params[:request]
+  when :plus
+    image[:plus_code].match("^#{params[:request]}".upcase)
+  when :city
+    city(image[:latitude], image[:longitude], params[:request])
+  end
+end
+
+def city(img_lat, img_lon, city)
+  min_lat, max_lat, min_lon, max_lon = city.map(&:to_f)
+  img_lat = img_lat.to_f
+  img_lon = img_lon.to_f
+  lat_ok = (min_lat <= img_lat && img_lat <= max_lat)
+  lon_ok = (min_lon <= img_lon && img_lon <= max_lat)
+  lat_ok && lon_ok
+end
+
+def markers(data)
   photos_url = '/assets/photos/'
-  api(region).map do |photo|
+  data.map do |photo|
     {
       type: 'Feature',
       "geometry": { "type": "Point", "coordinates": [photo[:longitude], photo[:latitude]]},

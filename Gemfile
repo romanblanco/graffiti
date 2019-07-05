@@ -5,6 +5,7 @@ gem 'sinatra'
 gem 'exifr'
 gem 'sinatra-json'
 gem 'ipfs'
+gem 'geocoder'
 
 gem 'pry'
 gem 'pry-byebug'
