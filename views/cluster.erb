@@ -46,9 +46,9 @@
                                '<img src="' + a.properties.image + '" />' +
                            '</a>' +
                            '<p>Date: ' + a.properties.date + '</p>' +
-                           '<p>IPFS: <a href="https://ipfs.io/ipfs/' + a.properties.ipfs + '">ipfs.io</a></p>' +
-                           '<p>Plus: <a href="https://www.google.com/maps/search/?api=1&query='+ encodeURIComponent(a.properties.plus)+'">maps ('+ a.properties.plus +')</a></p>' +
-                           '<p>GPS: <a href="https://www.google.com/maps/search/?api=1&query='+a.properties.gps_latitude+','+ a.properties.gps_longitude + '">maps</a></p>';
+                           '<p>IPFS: <a target="_blank" rel="noopener noreferrer" href="https://ipfs.io/ipfs/' + a.properties.ipfs + '">ipfs.io</a></p>' +
+                           '<p>Plus: <a target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query='+ encodeURIComponent(a.properties.plus)+'">maps ('+ a.properties.plus +')</a></p>' +
+                           '<p>GPS: <a target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query='+a.properties.gps_latitude+','+ a.properties.gps_longitude + '">maps</a></p>';
         var marker = L.marker(new L.LatLng(Number(a["geometry"]["coordinates"][1]), Number(a["geometry"]["coordinates"][0])), {
             icon: L.mapbox.marker.icon({'marker-symbol': a.properties["marker-symbol"], 'marker-color': '0044FF'}),
             title: popupContent

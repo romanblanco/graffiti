@@ -24,7 +24,8 @@ class Resource
       'QmYVGFdAxxXYK2E8Ub8Xoe69YgAx19utAQZ639noYCvNxU',
     ]
     @graffiti_files = [
-      'QmeNNGcqg12BWoyHWJ1Aa6WaeTrct5WHjPpQ1LUGip7se1',
+      #@ipfs.cat('QmeNNGcqg12BWoyHWJ1Aa6WaeTrct5WHjPpQ1LUGip7se1'),
+      File.read('graffiti.json')
     ]
     @graffiti_data = []
     @images_data = []
@@ -48,23 +49,32 @@ class Resource
 
     # load data describing graffiti images
     @graffiti_files.each do |file|
-      graffiti_data.push(CSV.parse(@ipfs.cat(file), headers: true).map(&:to_h)).first
+      graffiti_data.push(JSON.parse(file))
       @graffiti_data = graffiti_data.flatten
     end
     @graffiti_data.map! { |hash|
       hash.inject({}) { |memo, (k, v)| memo[k.to_sym] = v; memo }
     }
 
+    # pre-download images
+    # @graffiti_data.each do |image|
+    #   if image[:latitude] != "" || image[:longitude] != ""
+    #     File.write("assets/photos/#{image[:ipfs]}.jpg", @ipfs.cat(image[:ipfs]))
+    #   end
+    # end
+
     undescribed = @images_data.map do |undescribed|
       undescribed if @graffiti_data.select do |image|
         image[:ipfs] == undescribed[:ipfs]
       end.empty?
     end.compact
+
     undescribed.each { |image|
-      File.write("assets/tmp/#{image[:ipfs]}.jpg", @ipfs.cat(image[:ipfs]))
+      File.write("assets/photos/#{image[:ipfs]}.jpg", @ipfs.cat(image[:ipfs]))
     }
+
     ipfs_download = undescribed.map { |image|
-      exif = EXIFR::JPEG.new("assets/tmp/#{image[:ipfs]}.jpg")
+      exif = EXIFR::JPEG.new("assets/photos/#{image[:ipfs]}.jpg")
       { :ipfs => image[:ipfs],
         :date =>  exif.date_time.to_s,
         :filename => nil,
@@ -149,7 +159,7 @@ def api(search_params)
       image[:latitude] = ''
       image[:longitude] = ''
       image[:plus_code] = ''
-      image[:surface] = ''
+      image[:surface] = nil
     end
     image if search(image, search_params)
   end.compact.sort_by { |image| image[:plus_code] }
