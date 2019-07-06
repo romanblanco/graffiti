@@ -54,6 +54,8 @@
                            (a.properties.surface == null ? '' : '<p>Surface: <a target="_blank" rel="noopener noreferrer" href="https://osm.org/' + a.properties.surface + '"> '+ a.properties.surface + '</a></p>') +
                            '<p>IPFS: <a target="_blank" rel="noopener noreferrer" href="https://ipfs.io/ipfs/' + a.properties.ipfs + '">ipfs.io</a></p>' +
                            '<p>Plus: '+ a.properties.olc +'</p>' +
+          (a.properties.tag == null ? '' : '<p>Tag: <a href="/tag/'+ a.properties.tag +'">' + a.properties.tag + '</a></p>') +
+
                            '<p>Google Maps: <a target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query='+ encodeURIComponent(a.properties.olc)+'">Plus Code </a>, <a target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query='+a.properties.gps_latitude+','+ a.properties.gps_longitude + '">GPS</a></p>'
         var marker = L.marker(new L.LatLng(Number(a["geometry"]["coordinates"][1]), Number(a["geometry"]["coordinates"][0])), {
             icon: L.mapbox.marker.icon({'marker-symbol': a.properties["marker-symbol"], 'marker-color': a.properties["marker-color"]}),

@@ -55,9 +55,9 @@ class Resource
       graffiti_data.push(JSON.parse(file))
       @graffiti_data = graffiti_data.flatten
     end
-    @graffiti_data.map! { |hash|
+    @graffiti_data.map! do |hash|
       hash.inject({}) { |memo, (k, v)| memo[k.to_sym] = v; memo }
-    }
+    end
 
     # pre-download images
     @graffiti_data.each do |image|
@@ -105,7 +105,7 @@ get '/' do
   }
 end
 
-get '/detail/?:region?' do |r|
+get '/detail/:region' do |r|
   erb :detail, :locals => {
     :data => markers(api(:type => :city,
                          :request => Geocoder.search(params['region']).first.data["boundingbox"])),
@@ -122,6 +122,15 @@ get '/city/?:city?' do |r|
   }
 end
 
+get '/tag/?:tag?' do |r|
+  erb :cluster, :locals => {
+    :data => markers(api(
+      :type => :tag,
+      :request => params['tag'].split(','))),
+    :token => settings.token
+  }
+end
+
 get '/api/?:ipfs?' do |r|
   if params.empty?
     json(api(:type => :all))
@@ -134,6 +143,12 @@ get '/api/city/?:city?' do |r|
   json(api(
     :type => :city,
     :request => Geocoder.search(params['city']).first.data["boundingbox"]))
+end
+
+get '/api/tag/?:tag?' do |r|
+  json(api(
+    :type => :tag,
+    :request => params['tag'].split(',')))
 end
 
 get '/api/plus/?:region?' do |r|
@@ -153,7 +168,6 @@ def api(search_params)
     image_details = @@resource.graffiti_data.select do |description|
       image[:ipfs] == description[:ipfs]
     end
-    image[:url] = "https://ipfs.io/ipfs/#{image[:ipfs]}"
     if !image_details.empty? && !(image_details.first[:latitude] == "" ||
                                   image_details.first[:longitude] == "")
       data = image_details.first
@@ -165,12 +179,14 @@ def api(search_params)
         Float(data[:longitude]),
         16)
       image[:surface] = data[:surface]
+      image[:tag] = !data.nil? && !data[:tag].nil? ? data[:tag]  : []
     else
       image[:date] = ''
       image[:latitude] = ''
       image[:longitude] = ''
       image[:olc] = ''
       image[:surface] = nil
+      image[:tag] = !data.nil? && !data[:tag].nil? ? data[:tag]  : []
     end
     image if search(image, search_params)
   end.compact.sort_by { |image| image[:olc] }
@@ -187,6 +203,10 @@ def search(image, params)
     image[:olc].match("^#{params[:request]}".upcase)
   when :city
     city(image[:latitude], image[:longitude], params[:request])
+  when :tag
+    p image[:tag]
+
+    !((image[:tag] & params[:request]).empty?) if !image[:tag].nil?
   end
 end
 
@@ -213,6 +233,7 @@ def markers(data)
         "date": photo[:date],
         "gps_longitude": photo[:longitude],
         "gps_latitude": photo[:latitude],
+        "tag": photo[:tag].join(','),
         "olc": photo[:olc],
         "marker-symbol": "art-gallery",
         "marker-color": photo[:surface] != nil ? "#0088ce" : "#000000",

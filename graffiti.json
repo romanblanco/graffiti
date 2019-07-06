@@ -1167,7 +1167,8 @@
     "latitude": "49.1976966666667",
     "longitude": "16.5994186388889",
     "olc": "8FXR5HXX+3QFV8M7M",
-    "surface": null
+    "surface": null,
+    "tag": ["gee", "head"]
   },
   {
     "ipfs": "QmQz8Sm5bpoA5DvYLrr7STipJ9mdZR43THzEKuppekYqbh",
@@ -1377,7 +1378,8 @@
     "latitude": "49.1927604444444",
     "longitude": "16.6148910277778",
     "olc": "8FXR5JV7+4X2G2C93",
-    "surface": null
+    "surface": null,
+    "tag": [ "gee" ]
   },
   {
     "ipfs": "QmZS4WtFQ9shMCxjmnadxdBfassTu6ywCz2HvWXFmPYcZK",
@@ -1417,7 +1419,8 @@
     "latitude": "49.1936836111111",
     "longitude": "16.61486625",
     "olc": "8FXR5JV7+FWH8QP27",
-    "surface": null
+    "surface": null,
+    "tag": [ "gee", "head" ]
   },
   {
     "ipfs": "QmNcKEwGAyyaWmT19wUWZkaFeT3Qdvngz9FByLj7UKKUpr",
@@ -1747,7 +1750,8 @@
     "latitude": "49.1951827777778",
     "longitude": "16.612051",
     "olc": "8FXR5JW6+3RF8GJVH",
-    "surface": null
+    "surface": null,
+    "tag": [ "gee", "head" ]
   },
   {
     "ipfs": "QmXjK5R278M9UdmjNrsqQbH8tqVkLTbSEJ8kad2gjfnGxC",
@@ -2307,7 +2311,8 @@
     "latitude": "49.1986312777778",
     "longitude": "16.6131515277778",
     "olc": "8FXR5JX7+F729787V",
-    "surface": null
+    "surface": null,
+    "tag": ["gee", "head"]
   },
   {
     "ipfs": "QmQYg3CTCrUg5yuZfWtASKFwvqAGTqGWz8kgPgbM71Cvaq",
@@ -2317,7 +2322,8 @@
     "latitude": "49.1987380833333",
     "longitude": "16.62161825",
     "olc": "8FXR5JXC+FJXHJ4C4",
-    "surface": null
+    "surface": null,
+    "tag": ["gee", "head"]
   },
   {
     "ipfs": "QmNwSJNNymUGrTeatXxvjYK498JtKdajiQyovcFGSQ5CHZ",
@@ -2327,7 +2333,8 @@
     "latitude": "49.1986541666667",
     "longitude": "16.6216945555556",
     "olc": "8FXR5JXC+FM82X4V5",
-    "surface": null
+    "surface": null,
+    "tag": ["gee", "head"]
   },
   {
     "ipfs": "QmW5nnVfEGSaRRssKiSoAcEGjYkJRHqki6mXqMzNzLB7kB",
@@ -2337,7 +2344,8 @@
     "latitude": "49.1995811388889",
     "longitude": "16.6298236666667",
     "olc": "8FXR5JXH+RWP774QF",
-    "surface": null
+    "surface": null,
+    "tag": ["gee", "head"]
   },
   {
     "ipfs": "QmdQ4rrcjYkcrVCMQ1cUggg7SwEFqobX6TWVDV2191ZHHD",
@@ -2347,7 +2355,8 @@
     "latitude": "49.1997413611111",
     "longitude": "16.629673",
     "olc": "8FXR5JXH+VVVP68V2",
-    "surface": null
+    "surface": null,
+    "tag": ["sker"]
   },
   {
     "ipfs": "QmYecJYwgXJ8LSyFx4uuW1DCzJYqAZBu58mefN9ZWsvYJw",
@@ -2597,7 +2606,10 @@
     "latitude": "49.2174224722222",
     "longitude": "16.5852756388889",
     "olc": "8FXR6H8P+X46XFC8R",
-    "surface": null
+    "surface": null,
+    "tag": [
+      "gee", "head"
+    ]
   },
   {
     "ipfs": "QmPbhzQrvjqMsJG1WfoKQMyJcCEA1FYnpPMebUSz37Bbt4",
@@ -2607,7 +2619,10 @@
     "latitude": "49.2174453611111",
     "longitude": "16.5853156944444",
     "olc": "8FXR6H8P+X4GR38W2",
-    "surface": null
+    "surface": null,
+    "tag": [
+      "pokor"
+    ]
   },
   {
     "ipfs": "QmYn2edukB5P6qUehzVqqPxYAwQf4ZQtnCoiBFmgKXZnAG",
@@ -2617,7 +2632,8 @@
     "latitude": "49.2188186388889",
     "longitude": "16.5517043888889",
     "olc": "8FXR6H92+GMGPJP4V",
-    "surface": null
+    "surface": null,
+    "tag": ["head", "gee"]
   },
   {
     "ipfs": "QmUMQ7JUbJUuhW69DHyy31HHAGLV97h9HChCQ5uV4gksFo",
@@ -2627,7 +2643,8 @@
     "latitude": "49.2196006666667",
     "longitude": "16.5803832777778",
     "olc": "8FXR6H9J+R5R32J9Q",
-    "surface": null
+    "surface": null,
+    "tag": [ "pokor" ]
   },
   {
     "ipfs": "QmbyZbZzHw9ubddG6umiob7gSms1iBKnPV6yjqaR8dhfnU",
@@ -2717,7 +2734,8 @@
     "latitude": "49.2207145555556",
     "longitude": "16.5993041944444",
     "olc": "8FXR6HCX+7PMGXGQX",
-    "surface": null
+    "surface": null,
+    "tag": [ "gee", "head" ]
   },
   {
     "ipfs": "QmXLgRPShCcqjQwek3DAym5RLiqdKaeFg5772h88kcLRDW",
@@ -2797,7 +2815,8 @@
     "latitude": "49.2295875277778",
     "longitude": "16.5801219722222",
     "olc": "8FXR6HHJ+R2QHGFQ2",
-    "surface": null
+    "surface": null,
+    "tag": ["gee", "head"]
   },
   {
     "ipfs": "QmPTRwAFrt9PTWGRsxnrZMDZJHavbGfbW2VwyE1GrrUSrk",
@@ -2847,7 +2866,8 @@
     "latitude": "49.2304344166667",
     "longitude": "16.5811309722222",
     "olc": "8FXR6HJJ+5FC6XC2H",
-    "surface": null
+    "surface": null,
+    "tag": ["snail"]
   },
   {
     "ipfs": "QmYuEeRdUneo3nfE3PAcYfaCPjpwvhARXfpFYvhfNC7SWb",
@@ -2857,7 +2877,8 @@
     "latitude": "49.2307472222222",
     "longitude": "16.5815582222222",
     "olc": "8FXR6HJJ+7JVXF92H",
-    "surface": null
+    "surface": null,
+    "tag": [ "pokor" ]
   },
   {
     "ipfs": "QmZEUWxND6PmyXmximiS4RiHT2FpCBzSK8fwfBq6FUx4do",
@@ -2887,7 +2908,8 @@
     "latitude": "49.2309608333333",
     "longitude": "16.5819492222222",
     "olc": "8FXR6HJJ+9QPF4R2R",
-    "surface": null
+    "surface": null,
+    "tag": [ "gee", "head" ]
   },
   {
     "ipfs": "QmaorVGNjzBi8FhGTD8L7nn4SyFfo1p8RycY7RFKaD73Hf",
@@ -2947,7 +2969,8 @@
     "latitude": "49.2007331666667",
     "longitude": "16.6076125833333",
     "olc": "8FXR6J25+72X8M4W3",
-    "surface": null
+    "surface": null,
+    "tag": ["gee", "head"]
   },
   {
     "ipfs": "QmcgMAXZcRRFbgatNVqQY2HuUqdnf6Gy85r8t2a1PHiixK",
@@ -2967,7 +2990,8 @@
     "latitude": "49.2010345277778",
     "longitude": "16.6076984166667",
     "olc": "8FXR6J25+C387VGM3",
-    "surface": null
+    "surface": null,
+    "tag": ["pokor"]
   },
   {
     "ipfs": "QmeoqKhQeAtN99p773zmhES2ivmpLqmBYgEwWeDT2PY9W7",
@@ -2997,7 +3021,8 @@
     "latitude": "49.2022666666667",
     "longitude": "16.6280650833333",
     "olc": "8FXR6J2H+W64J7M7J",
-    "surface": null
+    "surface": null,
+    "tag": ["gee", "head"]
   },
   {
     "ipfs": "QmNpEYmbz3zE4kx5pRBCvud1TMRCJAMu5BhufpozQyxoiT",
@@ -3027,7 +3052,8 @@
     "latitude": "49.20423125",
     "longitude": "16.6073131388889",
     "olc": "8FXR6J34+MWW66776",
-    "surface": null
+    "surface": null,
+    "tag": ["gee", "head"]
   },
   {
     "ipfs": "QmaSQfyvZMePdkVMKK2f1K9MYqZg6oQR14VweneXnKpqhF",
@@ -3057,7 +3083,8 @@
     "latitude": "49.202507",
     "longitude": "16.6075782777778",
     "olc": "8FXR6J35+22486RVV",
-    "surface": null
+    "surface": null,
+    "tag": ["gee", "head"]
   },
   {
     "ipfs": "QmRwtS2vn62etJqHRP8V4syLmSPuAZUB4uqCksZG7pgUgw",
@@ -3097,7 +3124,8 @@
     "latitude": "49.2076835555556",
     "longitude": "16.6038017222222",
     "olc": "8FXR6J53+3GF8PFQW",
-    "surface": null
+    "surface": null,
+    "tag": ["snail"]
   },
   {
     "ipfs": "QmRkiFEMC6RKzdNwPZycCmsB3mjDfNvvp6ZrJgBnJcvRKg",
@@ -3187,7 +3215,8 @@
     "latitude": "49.2200851388889",
     "longitude": "16.6398658611111",
     "olc": "8FXR6JCQ+2WQG53MC",
-    "surface": null
+    "surface": null,
+    "tag": ["gee", "head"]
   },
   {
     "ipfs": "QmRfo2649Hf7MDNbkZLTZtBZxyXsFjkSmFYSv44maccgC2",
@@ -3227,7 +3256,8 @@
     "latitude": "49.2201156388889",
     "longitude": "16.6402378055556",
     "olc": "8FXR6JCR+23XP3Q2R",
-    "surface": null
+    "surface": null,
+    "tag": ["gee", "head"]
   },
   {
     "ipfs": "QmeU7G2efuaGtJRd782cmeqFeFbcAm6hrtNafi1JAJp4He",
@@ -3267,7 +3297,8 @@
     "latitude": "49.2202110277778",
     "longitude": "16.6404514166667",
     "olc": "8FXR6JCR+35PF924J",
-    "surface": null
+    "surface": null,
+    "tag": ["gee", "head"]
   },
   {
     "ipfs": "QmPVtfurNZjnCiq25RhP2db5fEJZT68notkhsJNFGrFMey",
@@ -3337,7 +3368,8 @@
     "latitude": "49.2232284444444",
     "longitude": "16.6009216111111",
     "olc": "8FXR6JF2+79V3QH75",
-    "surface": null
+    "surface": null,
+    "tag": ["gee"]
   },
   {
     "ipfs": "QmZzHMbY1mu1eW92EdseZQ8KsN3VCLQhCErmpXoqE7x3Aq",
@@ -3717,7 +3749,8 @@
     "latitude": "49.2268676666667",
     "longitude": "16.6006965555556",
     "olc": "8FXR6JG2+P7WMCP8J",
-    "surface": null
+    "surface": null,
+    "tag": ["gee", "head"]
   },
   {
     "ipfs": "QmYqQ3y6Nahw6LDU25tamQQ5N6JVpAK2DDLLXXv4kaCM8P",
@@ -3747,7 +3780,8 @@
     "latitude": "49.2268791111111",
     "longitude": "16.6001415",
     "olc": "8FXR6JG2+Q324R3HJ",
-    "surface": null
+    "surface": null,
+    "tag": ["gee"]
   },
   {
     "ipfs": "QmYtgJETeKjx9Ajarn53Ev8Zt593tjDtopcHuHJ76aozAP",
@@ -3847,7 +3881,8 @@
     "latitude": "49.2155608888889",
     "longitude": "16.6807212777778",
     "olc": "8FXR6M8J+67HC3VC8",
-    "surface": null
+    "surface": null,
+    "tag": ["snail"]
   },
   {
     "ipfs": "QmPupGh5Qs7S9cbxp7DaJhSpCMdqgMF8WQ3Dc17m3CAjbq",
