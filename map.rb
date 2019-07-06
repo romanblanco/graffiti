@@ -27,6 +27,9 @@ class Resource
       #@ipfs.cat('QmeNNGcqg12BWoyHWJ1Aa6WaeTrct5WHjPpQ1LUGip7se1'),
       File.read('graffiti.json')
     ]
+    @offline_area = [
+      '8FXR5JW',
+    ]
     @graffiti_data = []
     @images_data = []
     load_resource
@@ -57,11 +60,18 @@ class Resource
     }
 
     # pre-download images
-    # @graffiti_data.each do |image|
-    #   if image[:latitude] != "" || image[:longitude] != ""
-    #     File.write("assets/photos/#{image[:ipfs]}.jpg", @ipfs.cat(image[:ipfs]))
-    #   end
-    # end
+    @graffiti_data.each do |image|
+      if !image[:plus_code].empty? &&
+         @offline_area.any? do |area|
+           image[:plus_code].match("^#{area.upcase}")
+         end
+          image[:plus_code].match("^#{@offline_area[0]}".upcase)
+        unless File.file?("assets/photos/#{image[:ipfs]}.jpg")
+          p "downloading #{image[:ipfs]}"
+          File.write("assets/photos/#{image[:ipfs]}.jpg", @ipfs.cat(image[:ipfs]))
+        end
+      end
+    end
 
     undescribed = @images_data.map do |undescribed|
       undescribed if @graffiti_data.select do |image|
@@ -70,6 +80,7 @@ class Resource
     end.compact
 
     undescribed.each { |image|
+      p "graffiti.json should be updated, missing #{image[:ipfs]}"
       File.write("assets/photos/#{image[:ipfs]}.jpg", @ipfs.cat(image[:ipfs]))
     }
 
