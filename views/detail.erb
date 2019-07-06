@@ -17,7 +17,7 @@
     <script>
       L.mapbox.accessToken = "<%= token %>";
       var geoJson = <%= data %>;
-      var map = L.mapbox.map('map', 'mapbox.streets').setView([49.223, 16.605], 12);
+      var map = L.mapbox.map('map', 'mapbox.streets').setView([30, 0], 2);
       var myLayer = L.mapbox.featureLayer().addTo(map);
       myLayer.on('layeradd', function(e) {
         var marker = e.layer,
