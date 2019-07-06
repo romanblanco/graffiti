@@ -191,11 +191,12 @@ def search(image, params)
 end
 
 def city(img_lat, img_lon, city)
+
   min_lat, max_lat, min_lon, max_lon = city.map(&:to_f)
   img_lat = img_lat.to_f
   img_lon = img_lon.to_f
   lat_ok = (min_lat <= img_lat && img_lat <= max_lat)
-  lon_ok = (min_lon <= img_lon && img_lon <= max_lat)
+  lon_ok = (min_lon <= img_lon && img_lon <= max_lon)
   lat_ok && lon_ok
 end
 
