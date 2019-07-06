@@ -61,11 +61,11 @@ class Resource
 
     # pre-download images
     @graffiti_data.each do |image|
-      if !image[:plus_code].empty? &&
+      if !image[:olc].empty? &&
          @offline_area.any? do |area|
-           image[:plus_code].match("^#{area.upcase}")
+           image[:olc].match("^#{area.upcase}")
          end
-          image[:plus_code].match("^#{@offline_area[0]}".upcase)
+          image[:olc].match("^#{@offline_area[0]}".upcase)
         unless File.file?("assets/photos/#{image[:ipfs]}.jpg")
           p "downloading #{image[:ipfs]}"
           File.write("assets/photos/#{image[:ipfs]}.jpg", @ipfs.cat(image[:ipfs]))
@@ -107,8 +107,8 @@ end
 
 get '/detail/?:region?' do |r|
   erb :detail, :locals => {
-    :data => markers(api(:type => :plus,
-                         :request => params['region'])),
+    :data => markers(api(:type => :city,
+                         :request => Geocoder.search(params['region']).first.data["boundingbox"])),
     :token => settings.token
   }
 end
@@ -160,7 +160,7 @@ def api(search_params)
       image[:date] = data[:date]
       image[:latitude] = data[:latitude]
       image[:longitude] = data[:longitude]
-      image[:plus_code] = olc.encode(
+      image[:olc] = olc.encode(
         Float(data[:latitude]),
         Float(data[:longitude]),
         16)
@@ -169,11 +169,11 @@ def api(search_params)
       image[:date] = ''
       image[:latitude] = ''
       image[:longitude] = ''
-      image[:plus_code] = ''
+      image[:olc] = ''
       image[:surface] = nil
     end
     image if search(image, search_params)
-  end.compact.sort_by { |image| image[:plus_code] }
+  end.compact.sort_by { |image| image[:olc] }
   result
 end
 
@@ -184,14 +184,13 @@ def search(image, params)
   when :ipfs
     image[:ipfs] == params[:request]
   when :plus
-    image[:plus_code].match("^#{params[:request]}".upcase)
+    image[:olc].match("^#{params[:request]}".upcase)
   when :city
     city(image[:latitude], image[:longitude], params[:request])
   end
 end
 
 def city(img_lat, img_lon, city)
-
   min_lat, max_lat, min_lon, max_lon = city.map(&:to_f)
   img_lat = img_lat.to_f
   img_lon = img_lon.to_f
@@ -214,11 +213,11 @@ def markers(data)
         "date": photo[:date],
         "gps_longitude": photo[:longitude],
         "gps_latitude": photo[:latitude],
-        "plus": photo[:plus_code],
+        "olc": photo[:olc],
         "marker-symbol": "art-gallery",
-        "marker-color": photo[:surface] != nil ? "#00FF00" : "#000000",
+        "marker-color": photo[:surface] != nil ? "#0088ce" : "#000000",
         "marker-size": "medium",
       }
-    } if photo[:plus_code] != ''
+    } if photo[:olc] != ''
   end.compact.to_json
 end

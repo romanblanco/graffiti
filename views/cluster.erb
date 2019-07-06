@@ -8,15 +8,20 @@
     <link href='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.css' rel='stylesheet' />
     <style>
       body { margin:0; padding:0; }
-      #map { position:absolute; top:0; bottom:0; width:100%; }
+      #map { position:absolute; top:0; bottom:0; width:100%; z-index: 0;}
       .leaflet-popup-content img { max-width:100%; }
+      .attachment-full.size-full {
+        overflow: visible;
+        z-index: 999;
     </style>
   </head>
   <body>
     <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/leaflet.markercluster.js'></script>
     <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/MarkerCluster.css' rel='stylesheet' />
     <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/MarkerCluster.Default.css' rel='stylesheet' />
-    <div id='map'></div>
+
+
+    <div id='map'><a href="https://github.com/romanblanco/graffiti"><img width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a></div>
     <script>
       L.mapbox.accessToken = "<%= token %>";
       var geoJson = <%= data %>;
@@ -48,8 +53,8 @@
                            '<p>Date: ' + a.properties.date + '</p>' +
                            (a.properties.surface == null ? '' : '<p>Surface: <a target="_blank" rel="noopener noreferrer" href="https://osm.org/' + a.properties.surface + '"> '+ a.properties.surface + '</a></p>') +
                            '<p>IPFS: <a target="_blank" rel="noopener noreferrer" href="https://ipfs.io/ipfs/' + a.properties.ipfs + '">ipfs.io</a></p>' +
-                           '<p>Plus: '+ a.properties.plus +'</p>' +
-                           '<p>Google Maps: <a target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query='+ encodeURIComponent(a.properties.plus)+'">Plus Code </a>, <a target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query='+a.properties.gps_latitude+','+ a.properties.gps_longitude + '">GPS</a></p>'
+                           '<p>Plus: '+ a.properties.olc +'</p>' +
+                           '<p>Google Maps: <a target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query='+ encodeURIComponent(a.properties.olc)+'">Plus Code </a>, <a target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query='+a.properties.gps_latitude+','+ a.properties.gps_longitude + '">GPS</a></p>'
         var marker = L.marker(new L.LatLng(Number(a["geometry"]["coordinates"][1]), Number(a["geometry"]["coordinates"][0])), {
             icon: L.mapbox.marker.icon({'marker-symbol': a.properties["marker-symbol"], 'marker-color': a.properties["marker-color"]}),
             title: a.properties["ipfs"]
