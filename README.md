@@ -1,3 +1,5 @@
+http://185.8.166.79/
+
 Requirements:
 
 - Ruby (https://www.ruby-lang.org/en/)
@@ -14,6 +16,8 @@ Resources:
 Run:
 
 ```sh
+ipfs get QmdWeEuqA6gHACFGYd8yfiwyX8QGrQ7GzxRDdQPxf3VZxA
+ipfs get QmeNNGcqg12BWoyHWJ1Aa6WaeTrct5WHjPpQ1LUGip7se1
 ipfs pin add QmdWeEuqA6gHACFGYd8yfiwyX8QGrQ7GzxRDdQPxf3VZxA
 ipfs pin add QmeNNGcqg12BWoyHWJ1Aa6WaeTrct5WHjPpQ1LUGip7se1
 git clone https://github.com/romanblanco/graffiti.git
