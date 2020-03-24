@@ -4,8 +4,9 @@ gem 'plus_codes'
 gem 'sinatra'
 gem 'exifr'
 gem 'sinatra-json'
-gem 'ipfs'
 gem 'geocoder'
 
 gem 'pry'
 gem 'pry-byebug'
+
+gem 'ipfs-http-client', :git => 'https://gitlab.com/persper/gitlab/ipfs-http-client'

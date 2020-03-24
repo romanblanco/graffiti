@@ -1,6 +1,6 @@
 require 'sinatra'
 require 'sinatra/json'
-require 'ipfs/client'
+require 'ipfs-http-client'
 require 'plus_codes/open_location_code'
 require 'json'
 require 'exifr/jpeg'
@@ -12,13 +12,15 @@ set :static, true
 set :root, File.dirname(__FILE__)
 set :public_folder, Proc.new { File.join(root, "assets/photos/") }
 
+sleep(2) # to make sure IPFS is started by that time
+
 class Resource
   attr_accessor :ipfs
   attr_accessor :graffiti_data
   attr_accessor :images_data
 
   def initialize
-    @ipfs = IPFS::Client.default # uses localhost and port 5001
+    @ipfs = Ipfs::Client.new 'http://ipfs:5001'
     @images_nodes = [
       'QmdWeEuqA6gHACFGYd8yfiwyX8QGrQ7GzxRDdQPxf3VZxA',
       'QmYVGFdAxxXYK2E8Ub8Xoe69YgAx19utAQZ639noYCvNxU',
@@ -43,6 +45,7 @@ class Resource
 
     # load information about images available from ipfs nodes
     @images_nodes.each do |node|
+      p node
       images_data.push(
         @ipfs.ls(node).map do |node|
           node.links.map { |link| { ipfs: link.hashcode, size: link.size } }
@@ -96,9 +99,11 @@ class Resource
   end
 end
 
+p Dir.pwd
 @@resource = Resource.new
 
 get '/' do
+  p Dir.pwd
   erb :cluster, :locals => {
     :data => markers(api(:type => :all)),
     :token => settings.token
