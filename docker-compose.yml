@@ -18,8 +18,15 @@ services:
     ports:
           - "4567:4567"
     depends_on:
+      - collection
       - ipfs
     #command: sh -c './wait-for ipfs:5001 -- bundle exec ruby map.rb'
+  collection:
+    build: './collection'
+    ports:
+         - "8083:8083"
+    depends_on:
+      - ipfs
   ipfs:
     container_name: graffiti-ipfs
     image: ipfs/go-ipfs
