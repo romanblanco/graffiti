@@ -51,7 +51,7 @@ class Application extends React.Component {
         var description = e.features[0].properties;
 
         var popupContent = `
-        <a target="_blank" class="popup" href="http://127.0.0.1:8080/ipfs/${description.ipfs}">
+        <a target="_blank" class="popup" href="http://ipfs:8080/ipfs/${description.ipfs}">
           <img src="http://127.0.0.1:8080/ipfs/${description.ipfs}" height="140" width="200" />
         </a>
         <p>Date: ${description.date}</p>

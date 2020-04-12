@@ -1,32 +1,20 @@
 version: '3'
 
-#networks:
-#  vpcbr:
-#    driver: bridge
-#    ipam:
-#     config:
-#       - subnet: 10.5.0.0/16
-
 services:
   map:
     build: './map'
-    #networks:
-    #  vpcbr:
-    #    ipv4_address: 10.5.0.6
-    #links:
-    #  - "ipfs:localhost"
     ports:
           - "4567:4567"
     depends_on:
-      - collection
-      - ipfs
-    #command: sh -c './wait-for ipfs:5001 -- bundle exec ruby map.rb'
+      - "collection"
+    #command: ["./wait-for", "map:8083", "--", "npm", "start"]
   collection:
     build: './collection'
     ports:
          - "8083:8083"
     depends_on:
-      - ipfs
+      - "ipfs"
+    command: ["./wait-for", "ipfs:5001", "--", "graffiti"]
   ipfs:
     container_name: graffiti-ipfs
     image: ipfs/go-ipfs
@@ -36,14 +24,11 @@ services:
           - "8080:8080"
     volumes:
       - /data/ipfs:/data/ipfs/
-    #healthcheck:
-    #  test: ipfs swarm peers
-    #  interval: 5s
-    #  timeout: 10s
-    #  retries: 30
-    #networks:
-    #  vpcbr:
-    #    ipv4_address: 10.5.0.5
+    healthcheck:
+      test: ["CMD-SHELL", "ipfs swarm peers"]
+      interval: 5s
+      timeout: 10s
+      retries: 30
   test:
     container_name: test
     image: gotechnies/alpine-ssh
