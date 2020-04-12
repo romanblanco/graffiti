@@ -34,7 +34,7 @@ class Application extends React.Component {
     map.on("load", () => {
       map.addSource("graffiti", {
         type: "geojson",
-        data: "http://127.0.0.1:8083/geojson",
+        data: "http://collection:8083/geojson",
       });
 
       map.addLayer({
@@ -51,8 +51,8 @@ class Application extends React.Component {
         var description = e.features[0].properties;
 
         var popupContent = `
-        <a target="_blank" class="popup" href="http://127.0.0.1:8080/ipfs/${description.ipfs}">
-          <img src="http://127.0.0.1:8080/ipfs/${description.ipfs}" height="140" width="200" />
+        <a target="_blank" class="popup" href="http://ipfs:8080/ipfs/${description.ipfs}">
+          <img src="http://ipfs:8080/ipfs/${description.ipfs}" height="140" width="200" />
         </a>
         <p>Date: ${description.date}</p>
         <p>IPFS:
