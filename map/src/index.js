@@ -18,7 +18,7 @@ class Application extends React.Component {
   componentDidMount() {
     const map = new mapboxgl.Map({
       container: this.mapContainer,
-      style: "mapbox://styles/mapbox/light-v10",
+      style: "mapbox://styles/mapbox/dark-v10",
       center: [this.state.lng, this.state.lat],
       zoom: this.state.zoom
     });
@@ -39,21 +39,21 @@ class Application extends React.Component {
       });
 
       map.addLayer({
-        id: 'clusters',
-        type: 'circle',
-        source: 'graffiti',
-        filter: ['has', 'point_count'],
+        id: "clusters",
+        type: "circle",
+        source: "graffiti",
+        filter: ["has", "point_count"],
         paint: {
-          'circle-color': [
-            'step',
-            ['get', 'point_count'],
-            '#51bbd6',
-            100, '#f1f075',
-            750, '#f28cb1'
+          "circle-color": [
+            "step",
+            ["get", "point_count"],
+            "#51bbd6",
+            100, "#f1f075",
+            750, "#f28cb1"
           ],
-          'circle-radius': [
-            'step',
-            ['get', 'point_count'],
+          "circle-radius": [
+            "step",
+            ["get", "point_count"],
             20,
             100, 30,
             750, 40
@@ -62,35 +62,35 @@ class Application extends React.Component {
       });
 
       map.addLayer({
-        id: 'cluster-count',
-        type: 'symbol',
-        source: 'graffiti',
-        filter: ['has', 'point_count'],
+        id: "cluster-count",
+        type: "symbol",
+        source: "graffiti",
+        filter: ["has", "point_count"],
         layout: {
-          'text-field': '{point_count_abbreviated}',
-          'text-size': 10
+          "text-field": "{point_count_abbreviated}",
+          "text-size": 10
         }
       });
 
       map.addLayer({
-        id: 'unclustered-point',
-        type: 'circle',
-        source: 'graffiti',
-        filter: ['!', ['has', 'point_count']],
+        id: "unclustered-point",
+        type: "circle",
+        source: "graffiti",
+        filter: ["!", ["has", "point_count"]],
         paint: {
-          'circle-color': '#11b4da',
-          'circle-radius': 8,
-          'circle-stroke-width': 1,
-          'circle-stroke-color': '#fff'
+          "circle-color": "#11b4da",
+          "circle-radius": 8,
+          "circle-stroke-width": 1,
+          "circle-stroke-color": "#11b4da"
         }
       });
 
-      map.on('click', 'clusters', function(e) {
+      map.on("click", "clusters", function(e) {
         var features = map.queryRenderedFeatures(e.point, {
-          layers: ['clusters']
+          layers: ["clusters"]
         });
         var clusterId = features[0].properties.cluster_id;
-        map.getSource('graffiti').getClusterExpansionZoom(
+        map.getSource("graffiti").getClusterExpansionZoom(
           clusterId,
           function(err, zoom) {
             if (err) return;
@@ -103,43 +103,52 @@ class Application extends React.Component {
         );
       });
 
-      map.on('click', 'unclustered-point', function(e) {
+      map.on("click", "unclustered-point", function(e) {
         var coordinates = e.features[0].geometry.coordinates.slice();
         var description = e.features[0].properties;
 
         var popupContent = `
-        <a target="_blank" class="popup" href="http://ipfs:8080/ipfs/${description.ipfs}">
-          <img src="http://ipfs:8080/ipfs/${description.ipfs}" height="140" width="200" />
+        <a target="_blank"
+           class="popup"
+           href="http://ipfs:8080/ipfs/${description.ipfs}">
+          <picture>
+            <img src="http://ipfs:8080/ipfs/${description.ipfs}" />
+          </picture>
         </a>
-        <p>Date: ${description.date}</p>
-        <p>IPFS:
+        <div>
+          <label>Date:</label>
+          <time datetime="${description.date}">
+            ${new Date(description.date).toDateString()}
+          </time>
+        </div>
+        <div>
+          <label><abbr title="InterPlanetary File System">IPFS</abbr>:</label>
           <a target="_blank"
              rel="noopener noreferrer"
              href="https://ipfs.io/ipfs/${description.ipfs}">
-            ipfs.io
+            ${description.ipfs.substring(0, 17)}…
           </a>
-        </p>
-        <p>Plus: ${description.olc}</p>
-        <p>Google Maps:
+        </div>
+        <div>
+          <label><abbr title="Open Location Code">OLC</abbr>:</label>
           <a target="_blank"
              rel="noopener noreferrer"
              href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(description.olc)}">
-            Plus Code
-          </a>,
-          <a target="_blank"
-             rel="noopener noreferrer"
-             href="https://www.google.com/maps/search/?api=1&query=${description.latitude},${description.longitude}">
-            GPS
+            ${description.olc}
           </a>
-        </p>
-        <p>Tags: ${description.tags}</p>
-        <p>Surface:
+        </div>
+        <div>
+          <label><abbr title="OpenStreetMap Node">Surface</abbr>:</label>
           <a target="_blank"
              rel="noopener noreferrer"
              href="https://osm.org/${description.surface}">
             ${description.surface}
           </a>
-        </p>
+        </div>
+        <div>
+          <label>Tags:</label>
+          ${description.tags}
+        </div>
         `
 
         while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
@@ -152,11 +161,11 @@ class Application extends React.Component {
           .addTo(map);
       });
 
-      map.on('mouseenter', 'clusters', function() {
-          map.getCanvas().style.cursor = 'pointer';
+      map.on("mouseenter", "clusters", function() {
+          map.getCanvas().style.cursor = "pointer";
       });
-      map.on('mouseleave', 'clusters', function() {
-          map.getCanvas().style.cursor = '';
+      map.on("mouseleave", "clusters", function() {
+          map.getCanvas().style.cursor = "";
       });
 
       map.addControl(
@@ -175,7 +184,7 @@ class Application extends React.Component {
       <div>
         <div ref={el => this.mapContainer = el} className="mapContainer"/>
       </div>
-    )
+    );
   }
 }
 
