@@ -129,7 +129,7 @@ func main() {
 		var openLocCode string
 		lat, lon, err := exifData.LatLong()
 		if err != nil {
-			debugLog.Errorf("photo %s has no coordinates\n", photo.Name)
+			debugLog.Errorf("photo %s has no coordinates\n", photo.Hash)
 			latitude = LatLon{Value: 0, NotNull: false}
 			longitude = LatLon{Value: 0, NotNull: false}
 			openLocCode = ""

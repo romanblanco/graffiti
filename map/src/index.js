@@ -43,6 +43,7 @@ class Application extends React.Component {
         "source": "graffiti",
         "layout": {
           "icon-image": "art-gallery-15",
+          'icon-allow-overlap': true,
         },
       });
 
