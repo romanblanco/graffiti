@@ -78,10 +78,10 @@ class Application extends React.Component {
         source: "graffiti",
         filter: ["!", ["has", "point_count"]],
         paint: {
-          "circle-color": "#11b4da",
+          "circle-color": "#51bbd6",
           "circle-radius": 8,
           "circle-stroke-width": 1,
-          "circle-stroke-color": "#11b4da"
+          "circle-stroke-color": "#51bbd6"
         }
       });
 
@@ -107,6 +107,29 @@ class Application extends React.Component {
         var coordinates = e.features[0].geometry.coordinates.slice();
         var description = e.features[0].properties;
 
+        var surface = description.surface === "" ?
+            `query?lat=${description.latitude}&lon=${description.longitude}#map=17/${description.latitude}/${description.longitude}` :
+          description.surface;
+        var surfaceTitle = description.surface === "" ?
+          `→ …` :
+          description.surface;
+
+        const tags = JSON.parse(description.tags);
+        var tagsTitle;
+        if (tags === []) {
+          tagsTitle = ""
+        } else {
+          const tagsDiv = tags.map(tag => `<div class="tag tag-gray">${tag}</div>`);
+          tagsTitle = tagsDiv.join(" ");
+        }
+
+        var tagsElem;
+        if (tagsTitle === "") {
+          tagsElem = ""
+        } else {
+          tagsElem = "<div class=\"attr\"><label>Tags:</label> " + tagsTitle + "</div>";
+        }
+
         var popupContent = `
         <a target="_blank"
            class="popup"
@@ -115,40 +138,41 @@ class Application extends React.Component {
             <img src="http://ipfs:8080/ipfs/${description.ipfs}" />
           </picture>
         </a>
-        <div>
+        <div class="attr">
           <label>Date:</label>
-          <time datetime="${description.date}">
+          <time title="${new Date(description.date)}" datetime="${description.date}">
             ${new Date(description.date).toDateString()}
           </time>
         </div>
-        <div>
+        <div class="attr">
           <label><abbr title="InterPlanetary File System">IPFS</abbr>:</label>
           <a target="_blank"
+             class="tag ipfs"
+             title="${description.ipfs}"
              rel="noopener noreferrer"
              href="https://ipfs.io/ipfs/${description.ipfs}">
-            ${description.ipfs.substring(0, 17)}…
+            ${description.ipfs}
           </a>
         </div>
-        <div>
+        <div class="attr">
           <label><abbr title="Open Location Code">OLC</abbr>:</label>
           <a target="_blank"
+             class="tag"
              rel="noopener noreferrer"
              href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(description.olc)}">
             ${description.olc}
           </a>
         </div>
-        <div>
+        <div class="attr">
           <label><abbr title="OpenStreetMap Node">Surface</abbr>:</label>
           <a target="_blank"
+             class="tag"
              rel="noopener noreferrer"
-             href="https://osm.org/${description.surface}">
-            ${description.surface}
+             href="https://osm.org/${surface}">
+            ${surfaceTitle}
           </a>
         </div>
-        <div>
-          <label>Tags:</label>
-          ${description.tags}
-        </div>
+        ${tagsElem}
         `
 
         while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
