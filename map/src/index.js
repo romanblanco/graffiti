@@ -35,19 +35,75 @@ class Application extends React.Component {
       map.addSource("graffiti", {
         type: "geojson",
         data: "http://collection:8083/geojson",
+        cluster: true,
       });
 
       map.addLayer({
-        "id": "graffiti",
-        "type": "symbol",
-        "source": "graffiti",
-        "layout": {
-          "icon-image": "art-gallery-15",
-          'icon-allow-overlap': true,
-        },
+        id: 'clusters',
+        type: 'circle',
+        source: 'graffiti',
+        filter: ['has', 'point_count'],
+        paint: {
+          'circle-color': [
+            'step',
+            ['get', 'point_count'],
+            '#51bbd6',
+            100, '#f1f075',
+            750, '#f28cb1'
+          ],
+          'circle-radius': [
+            'step',
+            ['get', 'point_count'],
+            20,
+            100, 30,
+            750, 40
+          ]
+        }
       });
 
-      map.on("click", "graffiti", function(e) {
+      map.addLayer({
+        id: 'cluster-count',
+        type: 'symbol',
+        source: 'graffiti',
+        filter: ['has', 'point_count'],
+        layout: {
+          'text-field': '{point_count_abbreviated}',
+          'text-size': 10
+        }
+      });
+
+      map.addLayer({
+        id: 'unclustered-point',
+        type: 'circle',
+        source: 'graffiti',
+        filter: ['!', ['has', 'point_count']],
+        paint: {
+          'circle-color': '#11b4da',
+          'circle-radius': 8,
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#fff'
+        }
+      });
+
+      map.on('click', 'clusters', function(e) {
+        var features = map.queryRenderedFeatures(e.point, {
+          layers: ['clusters']
+        });
+        var clusterId = features[0].properties.cluster_id;
+        map.getSource('graffiti').getClusterExpansionZoom(
+          clusterId,
+          function(err, zoom) {
+            if (err) return;
+
+            map.easeTo({
+              center: features[0].geometry.coordinates,
+              zoom: zoom
+            });
+          }
+        );
+      });
+
+      map.on('click', 'unclustered-point', function(e) {
         var coordinates = e.features[0].geometry.coordinates.slice();
         var description = e.features[0].properties;
 
@@ -86,9 +142,6 @@ class Application extends React.Component {
         </p>
         `
 
-        // Ensure that if the map is zoomed out such that multiple
-        // copies of the feature are visible, the popup appears
-        // over the copy being pointed to.
         while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
           coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
         }
@@ -97,6 +150,13 @@ class Application extends React.Component {
           .setLngLat(coordinates)
           .setHTML(popupContent)
           .addTo(map);
+      });
+
+      map.on('mouseenter', 'clusters', function() {
+          map.getCanvas().style.cursor = 'pointer';
+      });
+      map.on('mouseleave', 'clusters', function() {
+          map.getCanvas().style.cursor = '';
       });
 
       map.addControl(
