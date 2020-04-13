@@ -2,8 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
-	"html/template"
 	"io"
 	"io/ioutil"
 	"log"
@@ -12,10 +10,16 @@ import (
 	"sort"
 	"time"
 
-	exif "github.com/rwcarlsen/goexif/exif"
 	extractor "./extractor"
-	ipfsShell "github.com/romanblanco/go-ipfs-api"
 	olc "github.com/google/open-location-code/go"
+	logging "github.com/op/go-logging"
+	ipfsShell "github.com/romanblanco/go-ipfs-api"
+	exif "github.com/rwcarlsen/goexif/exif"
+)
+
+var debugLog = logging.MustGetLogger("main")
+var format = logging.MustStringFormatter(
+	`%{color}%{time:15:04:05.000} %{shortfunc} — %{level:.4s} %{id:03x}%{color:reset} %{message}`,
 )
 
 type LatLon struct {
@@ -62,42 +66,35 @@ type GeoJsonFeature struct {
 }
 
 type GeoJsonCollection struct {
-	Type string `json:"type"`
+	Type     string           `json:"type"`
 	Features []GeoJsonFeature `json:"features"`
 }
 
-type GeoJsonSource struct {
-	Type string `json:"type"`
-  Data GeoJsonCollection `json:"data"`
-}
-
-type Map struct {
-	Token string
-	Data  template.JS
-}
-
 const IPFS_CONTENT string = "QmYa8Hi5dtahzUvqBN5orjFhsMyxcyQKefoiCGGmezooQ4"
-const TFile int = 2 // go-ipfs-api/shell.go constant describing file
+const TFile int = 2 // go-ipfs-api/shell.go constant describing file type
 
 func main() {
-	// parse graffiti.json into a set
+	backend := logging.NewLogBackend(os.Stderr, "", 0)
+	backendFormatter := logging.NewBackendFormatter(backend, format)
+	logging.SetBackend(backendFormatter)
+
+	debugLog.Infof("parsing graffiti metadata JSON file")
 	descriptionJson, err := ioutil.ReadFile("./graffiti.json")
 	if err != nil {
-		fmt.Print(os.Stderr, "error reading json file: %s\n", err)
+		debugLog.Errorf("error reading json file: %s\n", err)
 	}
 
 	var descriptionFromJSON GraffitiSet
 	err = json.Unmarshal(descriptionJson, &descriptionFromJSON)
 	if err != nil {
-		fmt.Println(err)
+		debugLog.Criticalf("%s\n", err)
 		panic("parsing JSON failed")
 	}
 
-	// connect to IPFS and load data from provided content
 	sh := ipfsShell.NewShell("127.0.0.1:5001")
 
+	debugLog.Infof("getting IPFS content")
 	// TODO: timeout https://github.com/tumregels/Network-Programming-with-Go/blob/master/socket/controlling_tcp_connections.md#timeout
-
 	photoMetadata, err := sh.List(IPFS_CONTENT)
 	descriptionFromIPFS := GraffitiSet{}
 
@@ -107,10 +104,10 @@ func main() {
 		panic("error while extracting raw tar")
 	}
 
-	// fill structure attributes from photo metadate
+	debugLog.Info("parsing EXIF data from photos")
 	for _, photo := range photoMetadata {
 		if photo.Type != TFile {
-			fmt.Printf("not a file, skipping %s\n", photo.Name)
+			debugLog.Errorf("not a file, skipping %s\n", photo.Name)
 			continue
 		}
 
@@ -125,20 +122,18 @@ func main() {
 
 		exifData, err := exif.Decode(freader)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "error decoding exif metadata: %s\n", err)
+			debugLog.Errorf("error decoding exif metadata: %s\n", err)
 		}
-
 
 		var latitude, longitude LatLon
 		var openLocCode string
 		lat, lon, err := exifData.LatLong()
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "photo %s has no coordinates: %s\n", photo.Name, err)
+			debugLog.Errorf("photo %s has no coordinates\n", photo.Name)
 			latitude = LatLon{Value: 0, NotNull: false}
 			longitude = LatLon{Value: 0, NotNull: false}
 			openLocCode = ""
 		} else {
-
 			latitude = LatLon{Value: lat, NotNull: true}
 			longitude = LatLon{Value: lon, NotNull: true}
 			openLocCode = olc.Encode(lat, lon, 16)
@@ -146,7 +141,7 @@ func main() {
 
 		date, err := exifData.DateTime()
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "can not parse date: %s\n", err)
+			debugLog.Errorf("can not parse date: %s\n", err)
 		}
 
 		meta := Graffiti{
@@ -162,16 +157,16 @@ func main() {
 		descriptionFromIPFS = append(descriptionFromIPFS, meta)
 	}
 
-	// merge loaded data from IPFS and harvested json with metadata
+	debugLog.Info("merging data from IPFS with metadata from JSON")
 	result, ipfsExtra, metadataExtra := merge(descriptionFromIPFS, descriptionFromJSON)
 
-	fmt.Printf("loaded slice len %d\n", len(result))
-	fmt.Printf("extra records in IPFS:\n %v\n\n", ipfsExtra)
-	fmt.Printf("extra records in metadata:\n %v\n\n", metadataExtra)
+	debugLog.Infof("loaded slice len %d\n", len(result))
+	debugLog.Infof("extra records in IPFS: %d\n", len(ipfsExtra))
+	debugLog.Infof("extra records in metadata: %d\n", len(metadataExtra))
 
 	export, err := json.Marshal(result)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "error creating JSON: %s", err)
+		debugLog.Errorf("error creating JSON: %s", err)
 	}
 
 	apiHandler := func(w http.ResponseWriter, req *http.Request) {
@@ -182,11 +177,13 @@ func main() {
 
 	geoJsonHandler := func(w http.ResponseWriter, req *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-    w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.WriteHeader(http.StatusOK)
 		io.WriteString(w, geoJson(result))
 	}
 
+	debugLog.Info("serving complete content at :8083/api")
+	debugLog.Info("serving geotagged content at :8083/geojson")
 	http.HandleFunc("/api", apiHandler)
 	http.HandleFunc("/geojson", geoJsonHandler)
 	log.Fatal(http.ListenAndServe(":8083", nil))
@@ -197,9 +194,9 @@ func geoJson(photos GraffitiSet) (jsonData string) {
 
 	for _, photo := range photos {
 
-    if photo.Olc == "" {
-      continue
-    }
+		if photo.Olc == "" {
+			continue
+		}
 
 		markerColor := "#000000"
 		if photo.Surface == "" {
@@ -207,34 +204,34 @@ func geoJson(photos GraffitiSet) (jsonData string) {
 		}
 
 		properties := MarkerProperties{
-			Ipfs         : photo.Ipfs,
-			Surface      : photo.Surface,
-			Date         : photo.Date,
-			Latitude     : photo.Latitude,
-			Longitude    : photo.Longitude,
-			Olc          : photo.Olc,
-			Tags         : photo.Tags,
-			MarkerSymbol : "art-gallery",
-			MarkerColor  : markerColor,
-			MarkerSize   : "medium",
+			Ipfs:         photo.Ipfs,
+			Surface:      photo.Surface,
+			Date:         photo.Date,
+			Latitude:     photo.Latitude,
+			Longitude:    photo.Longitude,
+			Olc:          photo.Olc,
+			Tags:         photo.Tags,
+			MarkerSymbol: "art-gallery",
+			MarkerColor:  markerColor,
+			MarkerSize:   "medium",
 		}
 
 		geometry := MarkerGeometry{
-			Type: "Point",
+			Type:        "Point",
 			Coordinates: []float64{photo.Longitude.Value, photo.Latitude.Value},
 		}
 
 		marker := GeoJsonFeature{
-			Type: "Feature",
-			Geometry: geometry,
+			Type:       "Feature",
+			Geometry:   geometry,
 			Properties: properties,
 		}
-		markers = append(markers, marker)
 
+		markers = append(markers, marker)
 	}
 
 	collection := GeoJsonCollection{
-		Type: "FeatureCollection",
+		Type:     "FeatureCollection",
 		Features: markers,
 	}
 
@@ -271,7 +268,6 @@ func merge(ipfsDataSlice, metadataSlice GraffitiSet) (united, ipfsExtras, metada
 			// enrich IPFS data with metadata attributes
 			ipfsDataSlice[ipfsCounter].Surface = metadataSlice[metaCounter].Surface
 			ipfsDataSlice[ipfsCounter].Tags = metadataSlice[metaCounter].Tags
-			// append
 			united = append(united, ipfsDataSlice[ipfsCounter])
 			ipfsCounter += 1
 			metaCounter += 1
@@ -300,7 +296,7 @@ func (i LatLon) UnmarshalJSON(data []byte) error {
 		return nil
 	}
 
-	// The key isn't set to null
+	// the key is not set to null
 	var tmp float64
 	if err := json.Unmarshal(data, &tmp); err != nil {
 		return err
@@ -312,7 +308,6 @@ func (i LatLon) UnmarshalJSON(data []byte) error {
 
 func (i LatLon) MarshalJSON() ([]byte, error) {
 	if i.NotNull {
-		// The key isn't set to null
 		return json.Marshal(i.Value)
 	}
 
