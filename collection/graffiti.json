@@ -356,7 +356,7 @@
     "latitude": 9.42751597222222,
     "longitude": -84.1659545833333,
     "olc": "66XQCRHM+2J3M5VR6",
-    "surface": "",
+    "surface": "way/77078529",
     "tags": []
   },
   {
@@ -500,7 +500,7 @@
     "latitude": 13.7670393888889,
     "longitude": 100.570843888889,
     "olc": "7P52QH8C+R89CR6VJ",
-    "surface": "",
+    "surface": "node/1690083872",
     "tags": []
   },
   {
@@ -509,7 +509,7 @@
     "latitude": 13.7670393888889,
     "longitude": 100.570843888889,
     "olc": "7P52QH8C+R89CR6VJ",
-    "surface": "",
+    "surface": "node/1690083872",
     "tags": []
   },
   {
@@ -2146,7 +2146,7 @@
     "latitude": 49.2296028055556,
     "longitude": 16.5298709722222,
     "olc": "8FXR6GHH+RWX5FX52",
-    "surface": "",
+    "surface": "way/737085945",
     "tags": []
   },
   {
@@ -2155,7 +2155,7 @@
     "latitude": 49.2295570277778,
     "longitude": 16.5299816111111,
     "olc": "8FXR6GHH+RXH7G43M",
-    "surface": "",
+    "surface": "way/737085945",
     "tags": []
   },
   {
@@ -2164,8 +2164,8 @@
     "latitude": 49.2296714722222,
     "longitude": 16.5297985,
     "olc": "8FXR6GHH+VW7W6H7V",
-    "surface": "",
-    "tags": []
+    "surface": "way/737085945",
+    "tags": ["ekyps"]
   },
   {
     "ipfs": "QmS5ABz84BkU2vfXoUo9CfPV8fai1SN1qT9SHfZvFgvzgy",
@@ -2173,7 +2173,7 @@
     "latitude": 49.2296981666667,
     "longitude": 16.5297679722222,
     "olc": "8FXR6GHH+VWCWM2X2",
-    "surface": "",
+    "surface": "way/737085945",
     "tags": []
   },
   {
@@ -2182,7 +2182,7 @@
     "latitude": 49.22974775,
     "longitude": 16.5297565277778,
     "olc": "8FXR6GHH+VWRRHMMM",
-    "surface": "",
+    "surface": "way/737085945",
     "tags": []
   },
   {
@@ -2191,8 +2191,8 @@
     "latitude": 49.2298011666667,
     "longitude": 16.5297145833333,
     "olc": "8FXR6GHH+WVG575V5",
-    "surface": "",
-    "tags": []
+    "surface": "way/737085945",
+    "tags": ["bufet"]
   },
   {
     "ipfs": "QmewcV7hDMCrcv66iXFyuU8bMABYuQEJoN7dqNcekPFUQ6",
@@ -2200,7 +2200,7 @@
     "latitude": 49.2297553888889,
     "longitude": 16.5298881388889,
     "olc": "8FXR6GHH+WX2748XP",
-    "surface": "",
+    "surface": "way/737085945",
     "tags": []
   },
   {
@@ -2209,7 +2209,7 @@
     "latitude": 49.2299041666667,
     "longitude": 16.5295390833333,
     "olc": "8FXR6GHH+XR73R2R2",
-    "surface": "",
+    "surface": "way/737085945",
     "tags": []
   },
   {
@@ -2218,7 +2218,7 @@
     "latitude": 49.2293472222222,
     "longitude": 16.5303134722222,
     "olc": "8FXR6GHJ+P4PRC75H",
-    "surface": "",
+    "surface": "way/737085945",
     "tags": []
   },
   {
@@ -2227,7 +2227,7 @@
     "latitude": 49.2294273333333,
     "longitude": 16.5301933055556,
     "olc": "8FXR6GHJ+Q3G2G9Q8",
-    "surface": "",
+    "surface": "way/737085945",
     "tags": []
   },
   {
@@ -2236,7 +2236,7 @@
     "latitude": 49.2294692777778,
     "longitude": 16.5301322777778,
     "olc": "8FXR6GHJ+Q3JJX89W",
-    "surface": "",
+    "surface": "way/737085945",
     "tags": []
   },
   {
@@ -2254,7 +2254,7 @@
     "latitude": 49.2295455833333,
     "longitude": 16.53001975,
     "olc": "8FXR6GHJ+R26W4CVH",
-    "surface": "",
+    "surface": "way/737085945",
     "tags": []
   },
   {
@@ -2357,7 +2357,7 @@
     "latitude": 49.2188186388889,
     "longitude": 16.5517043888889,
     "olc": "8FXR6H92+GMGPJP4V",
-    "surface": "",
+    "surface": "node/296571966",
     "tags": ["head", "gee"]
   },
   {
@@ -2735,7 +2735,7 @@
     "latitude": 49.2042693888889,
     "longitude": 16.6072978888889,
     "olc": "8FXR6J34+PW3PR8RM",
-    "surface": "",
+    "surface": "way/48398756",
     "tags": []
   },
   {
@@ -3464,7 +3464,7 @@
     "latitude": 49.2155608888889,
     "longitude": 16.6807212777778,
     "olc": "8FXR6M8J+67HC3VC8",
-    "surface": "",
+    "surface": "way/55848835",
     "tags": ["snail"]
   },
   {
@@ -3473,7 +3473,7 @@
     "latitude": 49.2260284166667,
     "longitude": 16.658432,
     "olc": "8FXR6MG5+C975MC4H",
-    "surface": "",
+    "surface": "way/77860153",
     "tags": []
   },
   {
@@ -3482,7 +3482,7 @@
     "latitude": 49.22603225,
     "longitude": 16.6584071944444,
     "olc": "8FXR6MG5+C976C798",
-    "surface": "",
+    "surface": "way/77860153",
     "tags": []
   },
   {
@@ -3491,7 +3491,7 @@
     "latitude": 49.2260970833333,
     "longitude": 16.65849875,
     "olc": "8FXR6MG5+C9QXH3F5",
-    "surface": "",
+    "surface": "way/77860153",
     "tags": []
   },
   {
@@ -3500,7 +3500,7 @@
     "latitude": 49.2260589444444,
     "longitude": 16.6585731388889,
     "olc": "8FXR6MG5+CCG7MVQJ",
-    "surface": "",
+    "surface": "way/77860153",
     "tags": []
   },
   {
@@ -3509,7 +3509,7 @@
     "latitude": 49.2260780277778,
     "longitude": 16.6585731388889,
     "olc": "8FXR6MG5+CCP3M35J",
-    "surface": "",
+    "surface": "way/77860153",
     "tags": []
   },
   {
@@ -3518,7 +3518,7 @@
     "latitude": 49.2261009166667,
     "longitude": 16.6586398888889,
     "olc": "8FXR6MG5+CFR35WFX",
-    "surface": "",
+    "surface": "way/77860153",
     "tags": []
   },
   {
@@ -3527,7 +3527,7 @@
     "latitude": 49.2261505,
     "longitude": 16.6592883888889,
     "olc": "8FXR6MG5+FP725GGF",
-    "surface": "",
+    "surface": "way/77860153",
     "tags": []
   },
   {
@@ -3536,7 +3536,7 @@
     "latitude": 49.2261543055556,
     "longitude": 16.6592883888889,
     "olc": "8FXR6MG5+FP72X8GM",
-    "surface": "",
+    "surface": "way/120950062",
     "tags": []
   },
   {
@@ -3545,7 +3545,7 @@
     "latitude": 49.27542875,
     "longitude": 16.6693057777778,
     "olc": "8FXR7MG9+5PF5JPJQ",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3599,7 +3599,7 @@
     "latitude": 49.2757148611111,
     "longitude": 16.6692466666667,
     "olc": "8FXR7MG9+7MQHWV6G",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3608,7 +3608,7 @@
     "latitude": 49.2757148611111,
     "longitude": 16.6692485555556,
     "olc": "8FXR7MG9+7MQHXV6C",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3626,7 +3626,7 @@
     "latitude": 49.2757110555556,
     "longitude": 16.6692561944444,
     "olc": "8FXR7MG9+7PJC9288",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3635,7 +3635,7 @@
     "latitude": 49.2757148611111,
     "longitude": 16.6692561944444,
     "olc": "8FXR7MG9+7PJCXR8G",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3644,7 +3644,7 @@
     "latitude": 49.2757225,
     "longitude": 16.6692752777778,
     "olc": "8FXR7MG9+7PJXCHHC",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3653,7 +3653,7 @@
     "latitude": 49.2758026111111,
     "longitude": 16.6685371388889,
     "olc": "8FXR7MG9+8CF2HJ26",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3662,7 +3662,7 @@
     "latitude": 49.2758026111111,
     "longitude": 16.6685371388889,
     "olc": "8FXR7MG9+8CF2HJ26",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3671,7 +3671,7 @@
     "latitude": 49.2758026111111,
     "longitude": 16.6685371388889,
     "olc": "8FXR7MG9+8CF2HJ26",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3680,7 +3680,7 @@
     "latitude": 49.2758026111111,
     "longitude": 16.6685371388889,
     "olc": "8FXR7MG9+8CF2HJ26",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3689,7 +3689,7 @@
     "latitude": 49.2758026111111,
     "longitude": 16.6685371388889,
     "olc": "8FXR7MG9+8CF2HJ26",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3698,7 +3698,7 @@
     "latitude": 49.2758026111111,
     "longitude": 16.6685371388889,
     "olc": "8FXR7MG9+8CF2HJ26",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3707,7 +3707,7 @@
     "latitude": 49.2758026111111,
     "longitude": 16.6685371388889,
     "olc": "8FXR7MG9+8CF2HJ26",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3716,7 +3716,7 @@
     "latitude": 49.2758026111111,
     "longitude": 16.6685371388889,
     "olc": "8FXR7MG9+8CF2HJ26",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3725,7 +3725,7 @@
     "latitude": 49.2758026111111,
     "longitude": 16.6685371388889,
     "olc": "8FXR7MG9+8CF2HJ26",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3734,7 +3734,7 @@
     "latitude": 49.27584075,
     "longitude": 16.6687431111111,
     "olc": "8FXR7MG9+8FQQ2MQP",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3743,7 +3743,7 @@
     "latitude": 49.2758521944444,
     "longitude": 16.6687641111111,
     "olc": "8FXR7MG9+8GR3H2XW",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3752,7 +3752,7 @@
     "latitude": 49.2758636388889,
     "longitude": 16.66880225,
     "olc": "8FXR7MG9+8GVGPQ2R",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3788,7 +3788,7 @@
     "latitude": 49.2757682777778,
     "longitude": 16.6689929722222,
     "olc": "8FXR7MG9+8H5QJ78V",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3797,7 +3797,7 @@
     "latitude": 49.2757682777778,
     "longitude": 16.6689929722222,
     "olc": "8FXR7MG9+8H5QJ78V",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3806,7 +3806,7 @@
     "latitude": 49.2757835277778,
     "longitude": 16.6689758055556,
     "olc": "8FXR7MG9+8H96QGM5",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3815,7 +3815,7 @@
     "latitude": 49.2758026111111,
     "longitude": 16.6689662777778,
     "olc": "8FXR7MG9+8HG5GP58",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3842,7 +3842,7 @@
     "latitude": 49.2757720833333,
     "longitude": 16.6690578333333,
     "olc": "8FXR7MG9+8J3XF4F5",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3851,7 +3851,7 @@
     "latitude": 49.2757644444445,
     "longitude": 16.6691226944444,
     "olc": "8FXR7MG9+8J5HWH72",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3860,7 +3860,7 @@
     "latitude": 49.2757720833333,
     "longitude": 16.6691188611111,
     "olc": "8FXR7MG9+8J5XC5F4",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3869,7 +3869,7 @@
     "latitude": 49.2757911666667,
     "longitude": 16.6691055277778,
     "olc": "8FXR7MG9+8J9M82R3",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3896,7 +3896,7 @@
     "latitude": 49.2757987777778,
     "longitude": 16.6691341388889,
     "olc": "8FXR7MG9+8M6VJPWH",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3905,7 +3905,7 @@
     "latitude": 49.2757987777778,
     "longitude": 16.6691341388889,
     "olc": "8FXR7MG9+8M6VJPWH",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3914,7 +3914,7 @@
     "latitude": 49.2757987777778,
     "longitude": 16.6691341388889,
     "olc": "8FXR7MG9+8M6VJPWH",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3923,7 +3923,7 @@
     "latitude": 49.2758216666667,
     "longitude": 16.6691341388889,
     "olc": "8FXR7MG9+8MCV6P8Q",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3932,7 +3932,7 @@
     "latitude": 49.27584075,
     "longitude": 16.6692523888889,
     "olc": "8FXR7MG9+8PJJ3JQP",
-    "surface": "",
+    "surface": "way/65049376",
     "tags": []
   },
   {
@@ -3941,7 +3941,7 @@
     "latitude": 49.5917510833333,
     "longitude": 18.0038604722222,
     "olc": "8FXWH2R3+PG5464C5",
-    "surface": "",
+    "surface": "way/511856210",
     "tags": []
   },
   {
@@ -3950,7 +3950,7 @@
     "latitude": 49.5918273888889,
     "longitude": 18.0037650833333,
     "olc": "8FXWH2R3+PGJ3H8XP",
-    "surface": "",
+    "surface": "way/511856210",
     "tags": []
   },
   {
@@ -3959,7 +3959,7 @@
     "latitude": 49.5918884166667,
     "longitude": 18.0037021388889,
     "olc": "8FXWH2R3+QF4FQF5H",
-    "surface": "",
+    "surface": "way/511856210",
     "tags": []
   },
   {
@@ -3968,7 +3968,7 @@
     "latitude": 49.592041,
     "longitude": 18.0034961666667,
     "olc": "8FXWH2R3+R99Q4RRW",
-    "surface": "",
+    "surface": "way/511856210",
     "tags": []
   },
   {
@@ -3977,7 +3977,7 @@
     "latitude": 49.5920791388889,
     "longitude": 18.0034599166667,
     "olc": "8FXWH2R3+R9P4X3QG",
-    "surface": "",
+    "surface": "way/511856210",
     "tags": []
   },
   {
@@ -3986,7 +3986,7 @@
     "latitude": 49.5921249166667,
     "longitude": 18.0033836111111,
     "olc": "8FXWH2R3+R9RVRVGW",
-    "surface": "",
+    "surface": "way/511856210",
     "tags": []
   },
   {
@@ -3995,7 +3995,7 @@
     "latitude": 49.5922012222222,
     "longitude": 18.00333975,
     "olc": "8FXWH2R3+V8P5795C",
-    "surface": "",
+    "surface": "way/511856210",
     "tags": []
   },
   {
@@ -4004,7 +4004,7 @@
     "latitude": 49.5922355555556,
     "longitude": 18.0032787222222,
     "olc": "8FXWH2R3+V8RH4GQV",
-    "surface": "",
+    "surface": "way/511856210",
     "tags": []
   },
   {
@@ -4013,7 +4013,7 @@
     "latitude": 49.5922889444445,
     "longitude": 18.00320625,
     "olc": "8FXWH2R3+W78GMWMP",
-    "surface": "",
+    "surface": "way/511856210",
     "tags": []
   },
   {
@@ -4022,7 +4022,7 @@
     "latitude": 49.5923271111111,
     "longitude": 18.0031642777778,
     "olc": "8FXWH2R3+W7M3C2FQ",
-    "surface": "",
+    "surface": "way/511856210",
     "tags": []
   },
   {
@@ -4031,7 +4031,7 @@
     "latitude": 49.5924949444444,
     "longitude": 18.0028419444444,
     "olc": "8FXWH2R3+X4WQXRMJ",
-    "surface": "",
+    "surface": "way/511856210",
     "tags": []
   },
   {
@@ -4040,7 +4040,7 @@
     "latitude": 49.5924224722222,
     "longitude": 18.0029659166667,
     "olc": "8FXWH2R3+X58XGG6X",
-    "surface": "",
+    "surface": "way/511856210",
     "tags": []
   },
   {
@@ -4049,7 +4049,7 @@
     "latitude": 49.5923766944444,
     "longitude": 18.00308225,
     "olc": "8FXWH2R3+X6448JF9",
-    "surface": "",
+    "surface": "way/511856210",
     "tags": []
   },
   {
