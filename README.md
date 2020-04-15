@@ -22,28 +22,29 @@ The maintained graffiti collection can be described by the users in [metadata](h
 
 ## Getting started
 
-### build and run server:
+- GeoJSON data server: https://github.com/romanblanco/graffiti-ipfs/:
 
-```sh
-$ cd collection/
+```
+$ go get github.com/romanblanco/graffiti-ipfs
+$ cd $GOPATH/bin
+$ # TODO: cp ../src/github.com/romanblanco/graffiti-ipfs/source.json .
 $ # TODO: update recources for data and metadata in source.json
-$ # go get <libraries>
-$ go build -o graffiti -ldflags="-s -w" .
-$ ./graffiti
+$ cp ../src/github.com/romanblanco/graffiti-ipfs/graffiti.json .
+$ ./graffiti-ipfs
 ```
 
-server is running at http://localhost:8083
+- MapboxGl map displaying photos: https://github.com/romanblanco/graffiti-map/:
 
-### run map client:
-
-```sh
-$ cd map/
-$ # update your Mapbox token in src/token.js
+```
+$ git clone https://github.com/romanblanco/graffiti.git
+$ cd graffiti/
+$ git submodule update --init --remote
+$ cd graffiti-map/
+$ git checkout master
 $ npm install
-$ npm start
-```
+$ npm run
 
-map is running at http://localhost:3000
+```
 
 
 ## Learn more
