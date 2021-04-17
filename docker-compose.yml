@@ -1,36 +1,38 @@
 version: '3'
 
 services:
-  map:
-    build: './map'
-    ports:
-          - "4567:4567"
-    depends_on:
-      - "collection"
-    #command: ["./wait-for", "map:8083", "--", "npm", "start"]
-  collection:
-    build: './collection'
-    ports:
-         - "8083:8083"
-    depends_on:
-      - "ipfs"
-    command: ["./wait-for", "ipfs:5001", "--", "graffiti"]
   ipfs:
     container_name: graffiti-ipfs
     image: ipfs/go-ipfs
     ports:
-          - "4001:4001"
-          - "5001:5001"
-          - "8080:8080"
+      - "4001:4001" # ipfs swarm
+      - "5001:5001" # ipfs api
+      - "8080:8080" # ipfs gateway
     volumes:
-      - /data/ipfs:/data/ipfs/
+      - ./data/ipfs:/data/ipfs/
     healthcheck:
       test: ["CMD-SHELL", "ipfs swarm peers"]
       interval: 5s
       timeout: 10s
       retries: 30
+  collection:
+    container_name: graffiti-collection
+    build: './collection'
+    ports:
+      - "8083:8083"
+    command: ["./wait-for", "ipfs:5001", "--", "graffiti"]
+    depends_on:
+      - "ipfs"
+  map:
+    container_name: graffiti-map
+    build: './map'
+    ports:
+      - "4567:4567"
+    depends_on:
+      - "collection"
+    #command: ["./wait-for", "collection:8083", "--", "npm", "start"]
   test:
     container_name: test
     image: gotechnies/alpine-ssh
     ports:
-          - "2222:22"
+      - "2222:22"

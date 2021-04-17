@@ -1,6 +1,0 @@
-[submodule "collection"]
-	path = collection
-	url = https://github.com/romanblanco/graffiti-ipfs
-[submodule "map"]
-	path = map
-	url = https://github.com/romanblanco/graffiti-map

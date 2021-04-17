@@ -25,6 +25,8 @@ The maintained graffiti collection can be described by the users in [metadata](h
 - GeoJSON data server: https://github.com/romanblanco/graffiti-ipfs/:
 
 ```
+$ # wip: $ docker-compose up -d
+
 $ go get github.com/romanblanco/graffiti-ipfs
 $ cd $GOPATH/bin
 $ # TODO: cp ../src/github.com/romanblanco/graffiti-ipfs/source.json .
