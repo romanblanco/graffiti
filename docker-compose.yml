@@ -9,7 +9,8 @@ services:
       - "5001:5001" # ipfs api
       - "8081:8080" # ipfs gateway
     volumes:
-      - ./data/ipfs:/data/ipfs/
+      # :z for SELinux
+      - ./data/ipfs:/data/ipfs:z
     healthcheck:
       test: ["CMD-SHELL", "ipfs swarm peers"]
       interval: 5s
