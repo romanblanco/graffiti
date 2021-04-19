@@ -1,0 +1,44 @@
+.mapContainer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+}
+
+.mapboxgl-popup-content img {
+  margin-top: 20px;
+  max-width: 100%;
+}
+
+.tag {
+  display: inline-block;
+  padding: 5px 5px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  color: #586069;
+  background-color: rgba(27,31,35,.08);
+  border-radius: 20px;
+}
+
+.tag-label {
+  float: right;
+  margin-left: 5px;
+}
+.tag-gray {
+  color: #fff;
+  background-color: #6a737d;
+}
+
+.ipfs {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 160px;
+  white-space: nowrap;
+  padding-bottom: 0px;
+}
+
+.attr {
+    margin-top: 3px;
+}
