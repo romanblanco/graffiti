@@ -2,12 +2,16 @@ version: '3'
 
 services:
   ipfs:
+    #image: linuxserver.io/linuxserver/ipfs:latest
+    #image: ipfs/go-ipfs:latest
+    image: linuxserver/ipfs:latest
     container_name: graffiti-ipfs
-    image: ipfs/go-ipfs:latest
+    restart: unless-stopped
     ports:
-      - "4001:4001" # ipfs swarm
-      - "5001:5001" # ipfs api
-      - "8081:8080" # ipfs gateway
+      - 4001:4001/tcp # ipfs swarm
+      - 5001:5001/tcp # ipfs api
+      - 8081:8080/tcp # ipfs gateway
+      - 4443:443/tcp # https web ui
     volumes:
       # :z for SELinux
       - ./data/ipfs:/data/ipfs:z
@@ -32,8 +36,8 @@ services:
     depends_on:
       - "ipfs"
       - "collection"
-  test:
-    container_name: test
-    image: gotechnies/alpine-ssh
-    ports:
-      - "2222:22"
+  #test:
+    #container_name: test
+    #image: gotechnies/alpine-ssh
+    #ports:
+      #- "2222:22"
