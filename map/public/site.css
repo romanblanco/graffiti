@@ -34,7 +34,7 @@
 .ipfs {
   text-overflow: ellipsis;
   overflow: hidden;
-  width: 160px;
+  width: 120px;
   white-space: nowrap;
   padding-bottom: 0px;
 }

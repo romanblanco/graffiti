@@ -177,7 +177,7 @@ class Application extends React.Component {
         if (tagsTitle === "") {
           tagsElem = ""
         } else {
-          tagsElem = "<div class=\"attr\"><label>Tags:</label> " + tagsTitle + "</div>";
+          tagsElem = "<i class=\"fas fa-tags\"></i><div class=\"attr\"> " + tagsTitle + "</div>";
         }
 
         var popupContent = `
@@ -189,23 +189,33 @@ class Application extends React.Component {
           </picture>
         </a>
         <div class="attr">
-          <label>Date:</label>
+          <abbr title="Date"><i class="fas fa-calendar-alt"></i></abbr>
           <time title="${new Date(description.date)}" datetime="${description.date}">
             ${new Date(description.date).toDateString()}
           </time>
         </div>
         <div class="attr">
-          <label><abbr title="InterPlanetary File System">IPFS</abbr>:</label>
+          <abbr title="InterPlanetary File System"><i class="fas fa-database"></i></abbr>
           <a target="_blank"
              class="tag ipfs"
              title="${description.ipfs}"
              rel="noopener noreferrer"
-             href="https://ipfs.io/ipfs/${description.ipfs}">
+             href="https://explore.ipld.io/#/explore/${description.ipfs}">
             ${description.ipfs}
           </a>
         </div>
         <div class="attr">
-          <label><abbr title="Open Location Code">OLC</abbr>:</label>
+          <abbr title="InterPlanetary File Linked Data"><i class="fas fa-sitemap"></i></abbr>
+          <a target="_blank"
+             class="tag ipfs"
+             title="${description.collection}"
+             rel="noopener noreferrer"
+             href="https://explore.ipld.io/#/explore/${description.collection}">
+            ${description.collection}
+          </a>
+        </div>
+        <div class="attr">
+          <abbr title="Open Location Code"><i class="fas fa-map-marked-alt"></i></abbr>
           <a target="_blank"
              class="tag"
              rel="noopener noreferrer"
@@ -214,7 +224,7 @@ class Application extends React.Component {
           </a>
         </div>
         <div class="attr">
-          <label><abbr title="OpenStreetMap Node">Surface</abbr>:</label>
+          <abbr title="OpenStreetMap Node"><i class="fas fa-spray-can"></i></abbr>
           <a target="_blank"
              class="tag"
              rel="noopener noreferrer"
