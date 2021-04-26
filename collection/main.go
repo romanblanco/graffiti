@@ -29,14 +29,15 @@ type LatLon struct {
 
 // Graffiti structure describes a graffiti photo stored in IPFS
 type Graffiti struct {
-	Name      string    `json:"name"`
-	Ipfs      string    `json:"ipfs"`
-	Date      time.Time `json:"date,omitempty"`
-	Latitude  LatLon    `json:"latitude,omitempty"`
-	Longitude LatLon    `json:"longitude,omitempty"`
-	Olc       string    `json:"olc"`
-	Surface   string    `json:"surface"`
-	Tags      []string  `json:"tags"`
+	Name       string    `json:"name"`
+	Ipfs       string    `json:"ipfs"`
+	Collection string    `json:"collection"`
+	Date       time.Time `json:"date,omitempty"`
+	Latitude   LatLon    `json:"latitude,omitempty"`
+	Longitude  LatLon    `json:"longitude,omitempty"`
+	Olc        string    `json:"olc"`
+	Surface    string    `json:"surface"`
+	Tags       []string  `json:"tags"`
 }
 
 type GraffitiSet []Graffiti
@@ -46,6 +47,7 @@ type GraffitiSet []Graffiti
 //       data.
 type MarkerProperties struct {
 	Ipfs         string    `json:"ipfs"`
+	Collection   string    `json:"collection"`
 	Surface      string    `json:"surface"`
 	Date         time.Time `json:"date"`
 	Latitude     LatLon    `json:"latitude"`
@@ -98,9 +100,9 @@ func main() {
 	}
 	debugLog.Debugf("parsed JSON with %v elements", len(descriptionFromJSON))
 
-  //sh := ipfsShell.NewShell("0.0.0.0:5001")
+	//sh := ipfsShell.NewShell("0.0.0.0:5001")
 	sh := ipfsShell.NewShell("ipfs:5001")
-  // This works locally
+	// This works locally
 	//sh := ipfsShell.NewShell("127.0.0.1:5001")
 
 	debugLog.Infof("getting IPFS content")
@@ -160,14 +162,15 @@ func main() {
 		}
 
 		meta := Graffiti{
-			Name:      photo.Name,
-			Ipfs:      photo.Hash,
-			Date:      date,
-			Olc:       openLocCode,
-			Latitude:  latitude,
-			Longitude: longitude,
-			Surface:   "",
-			Tags:      make([]string, 0),
+			Name:       photo.Name,
+			Ipfs:       photo.Hash,
+			Date:       date,
+			Olc:        openLocCode,
+			Latitude:   latitude,
+			Longitude:  longitude,
+			Surface:    "",
+			Collection: IPFS_CONTENT,
+			Tags:       make([]string, 0),
 		}
 		descriptionFromIPFS = append(descriptionFromIPFS, meta)
 	}
@@ -225,6 +228,7 @@ func geoJson(photos GraffitiSet) (jsonData string) {
 		properties := MarkerProperties{
 			Ipfs:         photo.Ipfs,
 			Surface:      photo.Surface,
+			Collection:   photo.Collection,
 			Date:         photo.Date,
 			Latitude:     photo.Latitude,
 			Longitude:    photo.Longitude,
