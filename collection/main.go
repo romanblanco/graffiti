@@ -69,9 +69,8 @@ type GraffitiFeatureCollection struct {
 	Features []GraffitiFeature `json:"features"`
 }
 
-// TODO: IPFS_CONTENT should be an array of IPFS content hashes to use as a
-//       source of photos.
-
+// TODO: IPFS_CONTENT should be an array of IPFS content hashes parsed
+// from source.json to be use as a source of photos.
 const IPFS_CONTENT string = "QmYa8Hi5dtahzUvqBN5orjFhsMyxcyQKefoiCGGmezooQ4"
 const TFile int = 2 // go-ipfs-api/shell.go constant describing file type
 
@@ -81,7 +80,7 @@ func main() {
 	logging.SetBackend(backendFormatter)
 
 	debugLog.Infof("parsing graffiti metadata JSON file")
-	descriptionJson, err := ioutil.ReadFile("./graffiti.json")
+	descriptionJson, err := ioutil.ReadFile("./metadata.json")
 	if err != nil {
 		debugLog.Errorf("error reading json file: %s\n", err)
 	}
@@ -97,7 +96,8 @@ func main() {
 	sh := ipfsShell.NewShell("ipfs:5001")
 
 	debugLog.Infof("getting IPFS content")
-	// TODO: timeout https://github.com/tumregels/Network-Programming-with-Go/blob/master/socket/controlling_tcp_connections.md#timeout
+	// TODO: timeout
+  // https://github.com/tumregels/Network-Programming-with-Go/blob/master/socket/controlling_tcp_connections.md#timeout
 	photoMetadata, err := sh.List(IPFS_CONTENT)
 	debugLog.Debugf("got metadata of %v photos from IPFS", len(photoMetadata))
 	descriptionFromIPFS := GraffitiSet{}
