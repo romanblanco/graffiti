@@ -94,10 +94,7 @@ func main() {
 	}
 	debugLog.Debugf("parsed JSON with %v elements", len(descriptionFromJSON))
 
-	//sh := ipfsShell.NewShell("0.0.0.0:5001")
 	sh := ipfsShell.NewShell("ipfs:5001")
-	// This works locally
-	//sh := ipfsShell.NewShell("127.0.0.1:5001")
 
 	debugLog.Infof("getting IPFS content")
 	// TODO: timeout https://github.com/tumregels/Network-Programming-with-Go/blob/master/socket/controlling_tcp_connections.md#timeout

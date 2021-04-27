@@ -2,42 +2,52 @@ version: '3'
 
 services:
   ipfs:
-    #image: linuxserver.io/linuxserver/ipfs:latest
-    #image: ipfs/go-ipfs:latest
     image: linuxserver/ipfs:latest
     container_name: graffiti-ipfs
     restart: unless-stopped
+    networks:
+      - ipfs
     ports:
       - 4001:4001/tcp # ipfs swarm
       - 5001:5001/tcp # ipfs api
       - 8081:8080/tcp # ipfs gateway
-      - 4443:443/tcp # https web ui
+      - 4443:443/tcp # https web ui (80 for http)
     volumes:
-      # :z for SELinux
-      - ./data/ipfs:/data/ipfs:z
+      - ./data/ipfs:/data/ipfs:z # :z for SELinux
     healthcheck:
-      test: ["CMD-SHELL", "ipfs swarm peers"]
+      test: ['CMD-SHELL', 'ipfs swarm peers']
       interval: 5s
       timeout: 10s
       retries: 30
   collection:
     container_name: graffiti-collection
+    restart: unless-stopped
     build: './collection'
+    networks:
+      - ipfs
+      - collection
     ports:
-      - "8083:8083" # collection api
-    command: ["./wait-for", "ipfs:5001", "--", "graffiti"]
+      - 8083:8083/tcp # collection api
+    command: ['ping', '-c', '1', 'ipfs:5001']
     depends_on:
-      - "ipfs"
+      - ipfs
+    healthcheck:
+      test: ['CMD-SHELL', 'ping -c 1 ipfs:5001']
+      interval: 5s
+      timeout: 10s
+      retries: 30
   map:
     container_name: graffiti-map
     build: './map'
+    networks:
+      - collection
     ports:
-      - "4567:3000" # map ui (<host_ip>:4567)
+      - 4567:3000/tcp # map ui (<host_ip>:4567)
     depends_on:
       - "ipfs"
       - "collection"
-  #test:
-    #container_name: test
-    #image: gotechnies/alpine-ssh
-    #ports:
-      #- "2222:22"
+networks:
+  ipfs:
+    driver: bridge
+  collection:
+    driver: bridge

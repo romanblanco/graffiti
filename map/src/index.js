@@ -84,7 +84,7 @@ class Application extends React.Component {
 
       map.addSource("graffiti", {
         type: "geojson",
-        data: "http://127.0.0.1:8083/geojson",
+        data: "http://localhost:8083/geojson",
         cluster: true,
       });
 
@@ -183,9 +183,9 @@ class Application extends React.Component {
         var popupContent = `
         <a target="_blank"
            class="popup"
-           href="http://127.0.0.1:8081/ipfs/${description.ipfs}">
+           href="http://localhost:8081/ipfs/${description.ipfs}">
           <picture>
-            <img src="http://127.0.0.1:8081/ipfs/${description.ipfs}" />
+            <img src="http://localhost:8081/ipfs/${description.ipfs}" />
           </picture>
         </a>
         <div class="attr">
