@@ -1,18 +1,19 @@
 ### build and run server:
 
 ```sh
-$ go get github.com/ipfs/go-ipfs-api
-$ go get github.com/romanblanco/go-ipfs-api
-$ git clone https://github.com/romanblanco/graffiti-ipfs.git
-$ cd graffiti-ipfs/
+$ # getting modified go-ipfs-api library
+$ go get github.com/google/open-location-code/go
+$ go get github.com/op/go-logging
+$ go get github.com/romanblanco/go-ipfs-api@e9a1904e1ee945c2be8373afdd7cec026e6e31a0
+$ go get github.com/rwcarlsen/goexif/exif
 $ go build -o graffiti -ldflags="-s -w" .
 $ # TODO: update recources for data and metadata in source.json
-$ ./graffiti-ipfs
+$ ./graffiti
 ```
 
-server is running at http://localhost:8083
+server is running at http://localhost:8083.
 
-- `/api` -- JSON output of photos loaded from IPFS enriched by metadata
+- `/api` ― serving complete content (IPFS + metadata)
 
 ```json
 [
@@ -45,7 +46,7 @@ server is running at http://localhost:8083
 ]
 ```
 
-- `/geojson` -- GeoJSON source for graffiti-map
+- `/geojson` ― serving GeoJSON of only geotagged content
 
 ```json
 {
@@ -67,10 +68,7 @@ server is running at http://localhost:8083
         "latitude": 50.09414288888889,
         "longitude": 14.460802055555554,
         "olc": "9F2P3FV6+M83PGWG",
-        "tags": [],
-        "marker-symbol": "art-gallery",
-        "marker-color": "#0088ce",
-        "marker-size": "medium"
+        "tags": []
       }
     },
     {
@@ -89,10 +87,7 @@ server is running at http://localhost:8083
         "latitude": 49.19617841666666,
         "longitude": 16.628084166666667,
         "olc": "8FXR5JWH+F6G4QC3",
-        "tags": [],
-        "marker-symbol": "art-gallery",
-        "marker-color": "#0088ce",
-        "marker-size": "medium"
+        "tags": []
       }
     },
     ...

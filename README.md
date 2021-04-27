@@ -12,7 +12,7 @@ The core of the project are geotagged photos stored in [IPFS](), meaning they ar
 
 ### Metadata
 
-The maintained graffiti collection can be annotated by the user in [metadata](https://github.com/romanblanco/graffiti/blob/master/collection/graffiti.json), specifying OpenStreetMap node as a surface and tags for photos for better searchability.
+The maintained graffiti collection can be annotated by the user in [metadata](https://github.com/romanblanco/graffiti/blob/master/collection/metadata.json), specifying OpenStreetMap node as a surface and tags for photos for better searchability.
 
 ## Requirements
 
