@@ -8,6 +8,7 @@ mapboxgl.accessToken = TOKEN;
 class Application extends React.Component {
   constructor(props) {
     super(props);
+    // TODO: These should be loaded from URL params
     this.state = {
       lng: 5,
       lat: 34,
@@ -32,56 +33,6 @@ class Application extends React.Component {
     });
 
     map.on("load", () => {
-
-      // TODO: {{
-      // I want to fetch 8083/api and convert it into geojson here.
-      //
-      // However, I can only resolve these requests when running on
-      // local machine.
-      //
-      // If I try to load the website from another machine, I can reach the
-      // api on 8083/geojson endpoint, but the map can not fetch from these:
-      //
-      // Fails with ERR_CONNECTION_REFUSED
-
-      fetch('http://0.0.0.0:8083/geojson', {
-        credentials: 'same-origin'
-      })
-      .then(res => res.json())
-      .then((out) => {
-        console.log('Checkout this JSON! ', out);
-      })
-      .catch(err => { throw err });
-
-      fetch('http://127.0.0.1:8083/geojson', {
-        credentials: 'same-origin'
-      })
-      .then(res => res.json())
-      .then((out) => {
-        console.log('Checkout this JSON! ', out);
-      })
-      .catch(err => { throw err });
-
-      // I am not able to access this anywhere.
-      //
-      // The same happens on
-      // <a ... href="http://ipfs:8080/ipfs/${description.ipfs}" ...>
-      //
-      // Fails with ERR_NAME_NOT_RESOLVED.
-      //
-      // https://stackoverflow.com/questions/50299051/how-do-you-resolve-a-docker-alias-using-node/50334529
-
-      fetch('http://collection:8083/geojson', {
-        credentials: 'same-origin'
-      })
-      .then(res => res.json())
-      .then((out) => {
-        console.log('Checkout this JSON! ', out);
-      })
-      .catch(err => { throw err });
-
-      // }}
-
       map.addSource("graffiti", {
         type: "geojson",
         data: "http://localhost:8083/geojson",
