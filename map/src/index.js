@@ -195,6 +195,24 @@ class Application extends React.Component {
           </time>
         </div>
         <div class="attr">
+          <abbr title="Open Location Code"><i class="fas fa-map-marked-alt"></i></abbr>
+          <a target="_blank"
+             class="tag"
+             rel="noopener noreferrer"
+             href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(description.olc)}">
+            ${description.olc}
+          </a>
+        </div>
+        <div class="attr">
+          <abbr title="OpenStreetMap Node"><i class="fas fa-spray-can"></i></abbr>
+          <a target="_blank"
+             class="tag"
+             rel="noopener noreferrer"
+             href="https://osm.org/${surface}">
+            ${surfaceTitle}
+          </a>
+        </div>
+        <div class="attr">
           <abbr title="InterPlanetary File System"><i class="fas fa-database"></i></abbr>
           <a target="_blank"
              class="tag ipfs"
@@ -212,24 +230,6 @@ class Application extends React.Component {
              rel="noopener noreferrer"
              href="https://explore.ipld.io/#/explore/${description.collection}">
             ${description.collection}
-          </a>
-        </div>
-        <div class="attr">
-          <abbr title="Open Location Code"><i class="fas fa-map-marked-alt"></i></abbr>
-          <a target="_blank"
-             class="tag"
-             rel="noopener noreferrer"
-             href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(description.olc)}">
-            ${description.olc}
-          </a>
-        </div>
-        <div class="attr">
-          <abbr title="OpenStreetMap Node"><i class="fas fa-spray-can"></i></abbr>
-          <a target="_blank"
-             class="tag"
-             rel="noopener noreferrer"
-             href="https://osm.org/${surface}">
-            ${surfaceTitle}
           </a>
         </div>
         ${tagsElem}

@@ -42,37 +42,31 @@ type Graffiti struct {
 
 type GraffitiSet []Graffiti
 
-// TODO: Marker properties and geometry should be implemented on frontend side.
-//       The only responsibility of backend should be to provide necessary
-//       data.
-type MarkerProperties struct {
-	Ipfs         string    `json:"ipfs"`
-	Collection   string    `json:"collection"`
-	Surface      string    `json:"surface"`
-	Date         time.Time `json:"date"`
-	Latitude     LatLon    `json:"latitude"`
-	Longitude    LatLon    `json:"longitude"`
-	Olc          string    `json:"olc"`
-	Tags         []string  `json:"tags"`
-	MarkerSymbol string    `json:"marker-symbol"`
-	MarkerColor  string    `json:"marker-color"`
-	MarkerSize   string    `json:"marker-size"`
+type GraffitiProperties struct {
+	Ipfs       string    `json:"ipfs"`
+	Collection string    `json:"collection"`
+	Surface    string    `json:"surface"`
+	Date       time.Time `json:"date"`
+	Latitude   LatLon    `json:"latitude"`
+	Longitude  LatLon    `json:"longitude"`
+	Olc        string    `json:"olc"`
+	Tags       []string  `json:"tags"`
 }
 
-type MarkerGeometry struct {
+type GraffitiPoint struct {
 	Type        string    `json:"type"`
 	Coordinates []float64 `json:"coordinates"`
 }
 
-type GeoJsonFeature struct {
-	Type       string           `json:"type"`
-	Geometry   MarkerGeometry   `json:"geometry"`
-	Properties MarkerProperties `json:"properties"`
+type GraffitiFeature struct {
+	Type       string             `json:"type"`
+	Geometry   GraffitiPoint      `json:"geometry"`
+	Properties GraffitiProperties `json:"properties"`
 }
 
-type GeoJsonCollection struct {
-	Type     string           `json:"type"`
-	Features []GeoJsonFeature `json:"features"`
+type GraffitiFeatureCollection struct {
+	Type     string            `json:"type"`
+	Features []GraffitiFeature `json:"features"`
 }
 
 // TODO: IPFS_CONTENT should be an array of IPFS content hashes to use as a
@@ -201,18 +195,14 @@ func main() {
 	}
 
 	debugLog.Info("serving complete content at :8083/api")
-	debugLog.Info("serving geotagged content at :8083/geojson")
 	http.HandleFunc("/api", apiHandler)
+	debugLog.Info("serving geotagged content at :8083/geojson")
 	http.HandleFunc("/geojson", geoJsonHandler)
 	log.Fatal(http.ListenAndServe(":8083", nil))
 }
 
-// TODO: This should be implemented on frontend.
-//
-// geoJson function takes JSON data describing photos and enriches them by
-// mapbox properties for a marker.
 func geoJson(photos GraffitiSet) (jsonData string) {
-	markers := []GeoJsonFeature{}
+	markers := []GraffitiFeature{}
 
 	for _, photo := range photos {
 
@@ -220,31 +210,23 @@ func geoJson(photos GraffitiSet) (jsonData string) {
 			continue
 		}
 
-		markerColor := "#000000"
-		if photo.Surface == "" {
-			markerColor = "#0088ce"
+		properties := GraffitiProperties{
+			Ipfs:       photo.Ipfs,
+			Surface:    photo.Surface,
+			Collection: photo.Collection,
+			Date:       photo.Date,
+			Latitude:   photo.Latitude,
+			Longitude:  photo.Longitude,
+			Olc:        photo.Olc,
+			Tags:       photo.Tags,
 		}
 
-		properties := MarkerProperties{
-			Ipfs:         photo.Ipfs,
-			Surface:      photo.Surface,
-			Collection:   photo.Collection,
-			Date:         photo.Date,
-			Latitude:     photo.Latitude,
-			Longitude:    photo.Longitude,
-			Olc:          photo.Olc,
-			Tags:         photo.Tags,
-			MarkerSymbol: "art-gallery",
-			MarkerColor:  markerColor,
-			MarkerSize:   "medium",
-		}
-
-		geometry := MarkerGeometry{
+		geometry := GraffitiPoint{
 			Type:        "Point",
 			Coordinates: []float64{photo.Longitude.Value, photo.Latitude.Value},
 		}
 
-		marker := GeoJsonFeature{
+		marker := GraffitiFeature{
 			Type:       "Feature",
 			Geometry:   geometry,
 			Properties: properties,
@@ -253,7 +235,7 @@ func geoJson(photos GraffitiSet) (jsonData string) {
 		markers = append(markers, marker)
 	}
 
-	collection := GeoJsonCollection{
+	collection := GraffitiFeatureCollection{
 		Type:     "FeatureCollection",
 		Features: markers,
 	}
