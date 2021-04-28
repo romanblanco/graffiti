@@ -27,6 +27,11 @@ type LatLon struct {
 	NotNull bool
 }
 
+type CollectionsSource struct {
+	Collections []string `json:"collections"`
+	Metadata    []string `json:"metadata"`
+}
+
 // Graffiti structure describes a graffiti photo stored in IPFS
 type Graffiti struct {
 	Name       string    `json:"name"`
@@ -69,9 +74,6 @@ type GraffitiFeatureCollection struct {
 	Features []GraffitiFeature `json:"features"`
 }
 
-// TODO: IPFS_CONTENT should be an array of IPFS content hashes parsed
-// from source.json to be use as a source of photos.
-const IPFS_CONTENT string = "QmYa8Hi5dtahzUvqBN5orjFhsMyxcyQKefoiCGGmezooQ4"
 const TFile int = 2 // go-ipfs-api/shell.go constant describing file type
 
 func main() {
@@ -79,95 +81,111 @@ func main() {
 	backendFormatter := logging.NewBackendFormatter(backend, format)
 	logging.SetBackend(backendFormatter)
 
-	debugLog.Infof("parsing graffiti metadata JSON file")
-	descriptionJson, err := ioutil.ReadFile("./metadata.json")
+	debugLog.Infof("parsing collection source file source.json")
+	sourceJson, err := ioutil.ReadFile("./source.json")
 	if err != nil {
-		debugLog.Errorf("error reading json file: %s\n", err)
+		debugLog.Errorf("i/o error reading source.json: %s\n", err)
 	}
-
-	var descriptionFromJSON GraffitiSet
-	err = json.Unmarshal(descriptionJson, &descriptionFromJSON)
+	var source CollectionsSource
+	err = json.Unmarshal(sourceJson, &source)
 	if err != nil {
 		debugLog.Criticalf("%s\n", err)
-		panic("parsing JSON failed")
+		panic("parsing source.json failed")
 	}
-	debugLog.Debugf("parsed JSON with %v elements", len(descriptionFromJSON))
 
-	sh := ipfsShell.NewShell("ipfs:5001")
-
-	debugLog.Infof("getting IPFS content")
-	// TODO: timeout
-  // https://github.com/tumregels/Network-Programming-with-Go/blob/master/socket/controlling_tcp_connections.md#timeout
-	photoMetadata, err := sh.List(IPFS_CONTENT)
-	debugLog.Debugf("got metadata of %v photos from IPFS", len(photoMetadata))
-	descriptionFromIPFS := GraffitiSet{}
-
-	rawTar, err := sh.GetRawTar(IPFS_CONTENT)
-	debugLog.Debugf("got raw tar of photos from IPFS: %T: %v", rawTar, rawTar)
-	extractorInstance := extractor.New(rawTar)
+	// TODO: the metadata file should be obtained "metadata" object in
+	// source.json and should have an option to
+	// - read local file
+	// - fetch file from URL
+	// - fetch file from IPFS
+	debugLog.Infof("parsing graffiti metadata file metadata.json")
+	metadataJson, err := ioutil.ReadFile("./metadata.json")
 	if err != nil {
-		debugLog.Debugf("err:", err)
-		panic("error while extracting raw tar")
+		debugLog.Errorf("i/o error reading metadata.json: %s\n", err)
+	}
+	var metadata GraffitiSet
+	err = json.Unmarshal(metadataJson, &metadata)
+	if err != nil {
+		debugLog.Criticalf("%s\n", err)
+		panic("parsing metadata.json failed")
+	}
+	debugLog.Debugf("parsed %v records from metadata.json", len(metadata))
+
+	debugLog.Infof("connecting to IPFS")
+	sh := ipfsShell.NewShell("0.0.0.0:5001")
+	// TODO: timeout
+	// https://github.com/tumregels/Network-Programming-with-Go/blob/master/socket/controlling_tcp_connections.md#timeout
+
+	parsedCollection := GraffitiSet{}
+
+	for _, collection := range source.Collections {
+		collectionContent, err := sh.List(collection)
+		collectionRawTar, err := sh.GetRawTar(collection)
+		extractorInstance := extractor.New(collectionRawTar)
+		if err != nil {
+			debugLog.Debugf("err:", err)
+			panic("error while extracting raw tar")
+		}
+
+		for _, photo := range collectionContent {
+			debugLog.Debugf("parsing EXIF data for photo: %v", photo.Hash)
+			if photo.Type != TFile {
+				debugLog.Errorf("not a file, skipping %s\n", photo.Hash)
+				continue
+			}
+
+			finfo, freader, err := extractorInstance.Next()
+			if err != nil {
+				panic("error while loading following record")
+			}
+
+			if photo.Name != finfo.Name() {
+				panic("name mismatch")
+			}
+
+			exifData, err := exif.Decode(freader)
+			if err != nil {
+				debugLog.Errorf("error decoding exif metadata: %s\n", err)
+			}
+
+			var latitude, longitude LatLon
+			var openLocCode string
+			lat, lon, err := exifData.LatLong()
+			if err != nil {
+				debugLog.Errorf("photo %s has no coordinates\n", photo.Hash)
+				latitude = LatLon{Value: 0, NotNull: false}
+				longitude = LatLon{Value: 0, NotNull: false}
+				openLocCode = ""
+			} else {
+				latitude = LatLon{Value: lat, NotNull: true}
+				longitude = LatLon{Value: lon, NotNull: true}
+				openLocCode = olc.Encode(lat, lon, 16)
+			}
+
+			date, err := exifData.DateTime()
+			if err != nil {
+				debugLog.Errorf("can not parse date: %s\n", err)
+			}
+
+			meta := Graffiti{
+				Name:       photo.Name,
+				Ipfs:       photo.Hash,
+				Date:       date,
+				Olc:        openLocCode,
+				Latitude:   latitude,
+				Longitude:  longitude,
+				Surface:    "",
+				Collection: collection,
+				Tags:       make([]string, 0),
+			}
+			parsedCollection = append(parsedCollection, meta)
+		}
 	}
 
-	debugLog.Info("parsing EXIF data from photos")
-	for _, photo := range photoMetadata {
-
-		debugLog.Debugf("parsing EXIF data for photo: %v", photo.Name)
-		if photo.Type != TFile {
-			debugLog.Errorf("not a file, skipping %s\n", photo.Name)
-			continue
-		}
-
-		finfo, freader, err := extractorInstance.Next()
-		if err != nil {
-			panic("error while loading following record")
-		}
-
-		if photo.Name != finfo.Name() {
-			panic("name mismatch")
-		}
-
-		exifData, err := exif.Decode(freader)
-		if err != nil {
-			debugLog.Errorf("error decoding exif metadata: %s\n", err)
-		}
-
-		var latitude, longitude LatLon
-		var openLocCode string
-		lat, lon, err := exifData.LatLong()
-		if err != nil {
-			debugLog.Errorf("photo %s has no coordinates\n", photo.Hash)
-			latitude = LatLon{Value: 0, NotNull: false}
-			longitude = LatLon{Value: 0, NotNull: false}
-			openLocCode = ""
-		} else {
-			latitude = LatLon{Value: lat, NotNull: true}
-			longitude = LatLon{Value: lon, NotNull: true}
-			openLocCode = olc.Encode(lat, lon, 16)
-		}
-
-		date, err := exifData.DateTime()
-		if err != nil {
-			debugLog.Errorf("can not parse date: %s\n", err)
-		}
-
-		meta := Graffiti{
-			Name:       photo.Name,
-			Ipfs:       photo.Hash,
-			Date:       date,
-			Olc:        openLocCode,
-			Latitude:   latitude,
-			Longitude:  longitude,
-			Surface:    "",
-			Collection: IPFS_CONTENT,
-			Tags:       make([]string, 0),
-		}
-		descriptionFromIPFS = append(descriptionFromIPFS, meta)
-	}
+	parsedCollection = unique(parsedCollection)
 
 	debugLog.Info("merging data from IPFS with metadata from JSON")
-	result, ipfsExtra, metadataExtra := merge(descriptionFromIPFS, descriptionFromJSON)
+	result, ipfsExtra, metadataExtra := merge(parsedCollection, metadata)
 
 	debugLog.Infof("loaded slice len %d\n", len(result))
 	debugLog.Infof("extra records in IPFS: %d\n", len(ipfsExtra))
@@ -314,4 +332,16 @@ func (i LatLon) MarshalJSON() ([]byte, error) {
 	}
 
 	return []byte("null"), nil
+}
+
+func unique(items GraffitiSet) GraffitiSet {
+	keys := make(map[string]bool)
+	uniqueList := GraffitiSet{}
+	for _, item := range items {
+		if _, value := keys[item.Ipfs]; !value {
+			keys[item.Ipfs] = true
+			uniqueList = append(uniqueList, item)
+		}
+	}
+	return uniqueList
 }

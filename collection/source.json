@@ -5,6 +5,8 @@
         "QmYa8Hi5dtahzUvqBN5orjFhsMyxcyQKefoiCGGmezooQ4"
     ],
     "metadata": [
-        "./graffiti.json"
+        "QmYVGFdAxxXYK2E8Ub8Xoe69YgAx19utAQZ639noYCvQTa",
+        "./metadata.json",
+        "http://example.address.org/graffiti/metadata.json"
     ]
 }

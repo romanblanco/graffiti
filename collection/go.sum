@@ -95,6 +95,8 @@ github.com/romanblanco/go-ipfs-api v0.0.4-0.20210416203454-8185da3731c7 h1:ZBynj
 github.com/romanblanco/go-ipfs-api v0.0.4-0.20210416203454-8185da3731c7/go.mod h1:in1VM4wrBSQeDbxZGTOCVa1zw9Ch0JevhmYbFHVzX0E=
 github.com/romanblanco/go-ipfs-api v0.0.4-0.20210416232855-e9a1904e1ee9 h1:EOdp0nnSO6JQsUbte2DXyDX84iKfqi5LU3dnqWeMMsE=
 github.com/romanblanco/go-ipfs-api v0.0.4-0.20210416232855-e9a1904e1ee9/go.mod h1:A45LXjBxtHzTJadRfB7WOpw/6YqihJw/O25qw+KSPPE=
+github.com/romanblanco/go-ipfs-api v0.0.4-0.20210429201352-5d046310ffbd h1:MWWiwuY3Xmrq8bvpdpQ62m6cpN307+OTwRisopoi1Dg=
+github.com/romanblanco/go-ipfs-api v0.0.4-0.20210429201352-5d046310ffbd/go.mod h1:A45LXjBxtHzTJadRfB7WOpw/6YqihJw/O25qw+KSPPE=
 github.com/rwcarlsen/goexif v0.0.0-20190401172101-9e8deecbddbd h1:CmH9+J6ZSsIjUK3dcGsnCnO41eRBOnY12zwkn5qVwgc=
 github.com/rwcarlsen/goexif v0.0.0-20190401172101-9e8deecbddbd/go.mod h1:hPqNNc0+uJM6H+SuU8sEs5K5IQeKccPqeSjfgcKGgPk=
 github.com/spacemonkeygo/spacelog v0.0.0-20180420211403-2296661a0572 h1:RC6RW7j+1+HkWaX/Yh71Ee5ZHaHYt7ZP4sQgUrm6cDU=
