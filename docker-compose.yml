@@ -9,9 +9,8 @@ services:
       - ipfs
     ports:
       - 4001:4001/tcp # ipfs swarm
-      - 5001:5001/tcp # ipfs api
-      - 8081:8080/tcp # ipfs gateway
-      - 4443:443/tcp # https web ui (80 for http)
+      - 127.0.0.1:5001:5001/tcp # ipfs api
+      - 8080:8080/tcp # ipfs gateway
     volumes:
       - ./data/ipfs:/data/ipfs:z # :z for SELinux
     healthcheck:
@@ -31,6 +30,9 @@ services:
     command: ['ping', '-c', '1', 'ipfs:5001']
     depends_on:
       - ipfs
+    environment:
+      - VIRTUAL_HOST=domain.com
+      - LETSENCRYPT_HOST=domain.com
     healthcheck:
       test: ['CMD-SHELL', 'ping -c 1 ipfs:5001']
       interval: 5s
@@ -42,10 +44,19 @@ services:
     networks:
       - collection
     ports:
-      - 4567:3000/tcp # map ui (<host_ip>:4567)
+      - 3000:3000/tcp # map ui
     depends_on:
-      - "ipfs"
-      - "collection"
+      - ipfs
+      - collection
+  nginx:
+    build: './nginx'
+    container_name: graffiti-nginx
+    networks:
+      - collection
+    ports:
+      - 80:80/tcp
+      - 443:443/tcp
+    restart: always
 networks:
   ipfs:
     driver: bridge

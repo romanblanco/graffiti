@@ -1,8 +1,7 @@
-FROM node:13.12.0-alpine
+FROM node:16.0.0-alpine
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
-COPY package.json ./
-RUN npm install
-RUN npm install react-scripts@3.4.1 -g
 COPY . ./
+RUN npm --verbose install
+RUN npm install -g react-scripts@latest
 CMD ["npm", "start"]

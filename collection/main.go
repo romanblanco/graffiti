@@ -11,6 +11,7 @@ import (
 	"time"
 
 	olc "github.com/google/open-location-code/go"
+	mux "github.com/gorilla/mux"
 	logging "github.com/op/go-logging"
 	ipfsShell "github.com/romanblanco/go-ipfs-api"
 	extractor "github.com/romanblanco/graffiti-ipfs/extractor"
@@ -32,7 +33,7 @@ type CollectionsSource struct {
 	Metadata    []string `json:"metadata"`
 }
 
-// Graffiti structure describes a graffiti photo stored in IPFS
+// Defines properties for a graffiti photo stored in IPFS
 type Graffiti struct {
 	Name       string    `json:"name"`
 	Ipfs       string    `json:"ipfs"`
@@ -47,6 +48,7 @@ type Graffiti struct {
 
 type GraffitiSet []Graffiti
 
+// Defines properties for a graffiti photo used in GeoJSON
 type GraffitiProperties struct {
 	Ipfs       string    `json:"ipfs"`
 	Collection string    `json:"collection"`
@@ -119,6 +121,7 @@ func main() {
 	parsedCollection := GraffitiSet{}
 
 	for _, collection := range source.Collections {
+		debugLog.Infof("processing collection %v", collection)
 		collectionContent, err := sh.List(collection)
 		collectionRawTar, err := sh.GetRawTar(collection)
 		extractorInstance := extractor.New(collectionRawTar)
@@ -128,9 +131,9 @@ func main() {
 		}
 
 		for _, photo := range collectionContent {
-			debugLog.Debugf("parsing EXIF data for photo: %v", photo.Hash)
+			debugLog.Debugf("extracting EXIF data for photo %v", photo.Hash)
 			if photo.Type != TFile {
-				debugLog.Errorf("not a file, skipping %s\n", photo.Hash)
+				debugLog.Errorf("%s is not not a file, skipping\n", photo.Hash)
 				continue
 			}
 
@@ -145,7 +148,7 @@ func main() {
 
 			exifData, err := exif.Decode(freader)
 			if err != nil {
-				debugLog.Errorf("error decoding exif metadata: %s\n", err)
+				debugLog.Errorf("error decoding EXIF metadata: %s\n", err)
 			}
 
 			var latitude, longitude LatLon
@@ -184,7 +187,7 @@ func main() {
 
 	parsedCollection = unique(parsedCollection)
 
-	debugLog.Info("merging data from IPFS with metadata from JSON")
+	debugLog.Info("merging photos from IPFS with metadata from JSON")
 	result, ipfsExtra, metadataExtra := merge(parsedCollection, metadata)
 
 	debugLog.Infof("loaded slice len %d\n", len(result))
@@ -196,7 +199,9 @@ func main() {
 		debugLog.Errorf("error creating JSON: %s", err)
 	}
 
-	apiHandler := func(w http.ResponseWriter, req *http.Request) {
+	r := mux.NewRouter()
+
+	collectionHandler := func(w http.ResponseWriter, req *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		io.WriteString(w, string(export))
@@ -209,11 +214,12 @@ func main() {
 		io.WriteString(w, geoJson(result))
 	}
 
-	debugLog.Info("serving complete content at :8083/api")
-	http.HandleFunc("/api", apiHandler)
-	debugLog.Info("serving geotagged content at :8083/geojson")
-	http.HandleFunc("/geojson", geoJsonHandler)
-	log.Fatal(http.ListenAndServe(":8083", nil))
+	debugLog.Info("serving complete content json at :8083/collection")
+	r.HandleFunc("/collection", collectionHandler)
+	debugLog.Info("serving geotagged content geojson at :8083/geojson")
+	r.HandleFunc("/geojson", geoJsonHandler)
+	debugLog.Info("serving react frontend at :8083/")
+	log.Fatal(http.ListenAndServe(":8083", r))
 }
 
 func geoJson(photos GraffitiSet) (jsonData string) {

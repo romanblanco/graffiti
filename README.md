@@ -33,7 +33,7 @@ graffiti-collection | 05:12:52.065 main — DEBU 002 parsed JSON with 545 elemen
 graffiti-collection | 05:12:52.065 main — INFO 003 getting IPFS content
 ```
 
-This could take a few minutes to the fresh IPFS setup to discover the content source and start downloading images. You can monitor your IPFS instance running at https://localhost:4443.
+This could take a few minutes to the fresh IPFS setup to discover the content source and start downloading images. On `localhost`, you can monitor your IPFS instance running at https://localhost:5001/webui.
 
 When the downloading starts, you should observe the following log:
 
@@ -48,15 +48,16 @@ graffiti-collection | 05:58:55.457 main — INFO 25c serving complete content at
 graffiti-collection | 05:58:55.457 main — INFO 25d serving geotagged content at :8083/geojson
 ```
 
-When the data are served, the working map should be available on http://localhost:4567/
+When the data are served, the working map should be available on http://localhost:3000/
 
 ## Troubleshooting
 
-If the `graffiti-collection` container is hanging on `getting IPFS content`, it is probably because the route to content has not been discovered. To help the discovery, run:
+If the `graffiti-collection` container is hanging on `getting IPFS content`, it is probably because the route to content has not been discovered. To help the discovery, by adding the peer distributing IPFS content:
 
 ```bash
 docker exec -it graffiti-ipfs sh
-ipfs ping QmZCtha6AHsaNRV1LScMXLewjx9M2imPTxKaP2ty2TJ219
+#ipfs bootstrap add <peer>
+ipfs bootstrap add /ip4/192.168.10.1/tcp/4001/ipfs/QmQVvZEmvjhYgsyEC7NvMn8EWf131EcgTXFFJexample3
 exit
 ```
 

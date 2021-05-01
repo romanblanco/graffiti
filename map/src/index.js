@@ -134,9 +134,9 @@ class Application extends React.Component {
         var popupContent = `
         <a target="_blank"
            class="popup"
-           href="http://localhost:8081/ipfs/${description.ipfs}">
+           href="http://localhost:8080/ipfs/${description.ipfs}">
           <picture>
-            <img src="http://localhost:8081/ipfs/${description.ipfs}" />
+            <img src="http://localhost:8080/ipfs/${description.ipfs}" />
           </picture>
         </a>
         <div class="attr">
