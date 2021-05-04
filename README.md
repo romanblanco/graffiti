@@ -22,7 +22,6 @@ The maintained graffiti collection can be annotated by the user in [metadata](ht
 
 ```
 docker-compose up -d --build
-docker-compose up
 ```
 
 In Docker log you should see the process is waiting for getting IPFS content:
@@ -48,7 +47,7 @@ graffiti-collection | 05:58:55.457 main — INFO 25c serving complete content at
 graffiti-collection | 05:58:55.457 main — INFO 25d serving geotagged content at :8083/geojson
 ```
 
-When the data are served, the working map should be available on http://localhost:3000/
+When the data are served, the working map should be available on http://localhost:3000/.
 
 ## Troubleshooting
 
