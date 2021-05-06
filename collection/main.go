@@ -42,7 +42,6 @@ type Graffiti struct {
 	Latitude   LatLon    `json:"latitude,omitempty"`
 	Longitude  LatLon    `json:"longitude,omitempty"`
 	Olc        string    `json:"olc"`
-	Surface    string    `json:"surface"`
 	Tags       []string  `json:"tags"`
 }
 
@@ -52,7 +51,6 @@ type GraffitiSet []Graffiti
 type GraffitiProperties struct {
 	Ipfs       string    `json:"ipfs"`
 	Collection string    `json:"collection"`
-	Surface    string    `json:"surface"`
 	Date       time.Time `json:"date"`
 	Latitude   LatLon    `json:"latitude"`
 	Longitude  LatLon    `json:"longitude"`
@@ -177,7 +175,6 @@ func main() {
 				Olc:        openLocCode,
 				Latitude:   latitude,
 				Longitude:  longitude,
-				Surface:    "",
 				Collection: collection,
 				Tags:       make([]string, 0),
 			}
@@ -233,7 +230,6 @@ func geoJson(photos GraffitiSet) (jsonData string) {
 
 		properties := GraffitiProperties{
 			Ipfs:       photo.Ipfs,
-			Surface:    photo.Surface,
 			Collection: photo.Collection,
 			Date:       photo.Date,
 			Latitude:   photo.Latitude,
@@ -292,7 +288,6 @@ func merge(ipfsDataSlice, metadataSlice GraffitiSet) (united, ipfsExtras, metada
 
 		if ipfsDataSlice[ipfsCounter].Ipfs == metadataSlice[metaCounter].Ipfs {
 			// enrich IPFS data with metadata attributes
-			ipfsDataSlice[ipfsCounter].Surface = metadataSlice[metaCounter].Surface
 			ipfsDataSlice[ipfsCounter].Tags = metadataSlice[metaCounter].Tags
 			united = append(united, ipfsDataSlice[ipfsCounter])
 			ipfsCounter += 1
