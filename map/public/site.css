@@ -4,6 +4,13 @@
   right: 0;
   left: 0;
   bottom: 0;
+  z-index: -1;
+}
+
+.github-corner {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .mapboxgl-popup-content img {
@@ -26,17 +33,10 @@
   float: right;
   margin-left: 5px;
 }
+
 .tag-gray {
   color: #fff;
   background-color: #6a737d;
-}
-
-.ipfs {
-  text-overflow: ellipsis;
-  overflow: hidden;
-  width: 120px;
-  white-space: nowrap;
-  padding-bottom: 0px;
 }
 
 .attr {

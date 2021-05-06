@@ -155,35 +155,24 @@ class Application extends React.Component {
           </a>
         </div>
         <div class="attr">
-          <abbr title="OpenStreetMap Node"><i class="fas fa-spray-can"></i></abbr>
-          <a target="_blank"
-             class="tag"
-             rel="noopener noreferrer"
-             href="https://osm.org/${surface}">
-            ${surfaceTitle}
-          </a>
+          <abbr title="IPFS CID"><i class="fas fa-database"></i></abbr>
+          <div class="tag">
+            <a target="_blank"
+               title="${description.collection}"
+               rel="noopener noreferrer"
+               href="https://explore.ipld.io/#/explore/${description.collection}">
+              ${description.collection.slice(0,6)}…
+            </a>/<a target="_blank"
+               title="${description.ipfs}"
+               rel="noopener noreferrer"
+               href="https://explore.ipld.io/#/explore/${description.ipfs}">
+              ${description.ipfs.slice(0,6)}…
+            </a>
+          </div>
         </div>
         <div class="attr">
-          <abbr title="InterPlanetary File System"><i class="fas fa-database"></i></abbr>
-          <a target="_blank"
-             class="tag ipfs"
-             title="${description.ipfs}"
-             rel="noopener noreferrer"
-             href="https://explore.ipld.io/#/explore/${description.ipfs}">
-            ${description.ipfs}
-          </a>
+          ${tagsElem}
         </div>
-        <div class="attr">
-          <abbr title="InterPlanetary File Linked Data"><i class="fas fa-sitemap"></i></abbr>
-          <a target="_blank"
-             class="tag ipfs"
-             title="${description.collection}"
-             rel="noopener noreferrer"
-             href="https://explore.ipld.io/#/explore/${description.collection}">
-            ${description.collection}
-          </a>
-        </div>
-        ${tagsElem}
         `
 
         while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
