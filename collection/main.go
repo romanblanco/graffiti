@@ -270,6 +270,10 @@ func merge(ipfsDataSlice, metadataSlice GraffitiSet) (united, ipfsExtras, metada
 	metadataSlice.sortByIpfsHash()
 
 	for {
+		// TODO: To allow only have metadata for some graffiti, this function
+		// should not care of slices lenght.
+		// Instead, an element from `ipfsDataSlice` should be found by IPFS id from
+		// `metadataSlice`.
 		if metaCounter == len(metadataSlice) && ipfsCounter == len(ipfsDataSlice) {
 			return
 		}
