@@ -20,6 +20,8 @@ class Application extends React.Component {
     const map = new mapboxgl.Map({
       container: this.mapContainer,
       style: "mapbox://styles/mapbox/dark-v10",
+      logoPosition: 'bottom-right',
+      keyboard: true,
       center: [this.state.lng, this.state.lat],
       zoom: this.state.zoom
     });
@@ -128,15 +130,15 @@ class Application extends React.Component {
         if (tagsTitle === "") {
           tagsElem = ""
         } else {
-          tagsElem = "<i class=\"fas fa-tags\"></i><div class=\"attr\"> " + tagsTitle + "</div>";
+          tagsElem = "<i class=\"fas fa-tags\"></i> " + tagsTitle;
         }
 
         var popupContent = `
         <a target="_blank"
            class="popup"
-           href="http://localhost:8080/ipfs/${description.ipfs}">
+           href="http://localhost:8081/ipfs/${description.ipfs}">
           <picture>
-            <img src="http://localhost:8080/ipfs/${description.ipfs}" />
+            <img src="http://localhost:8081/ipfs/${description.ipfs}" />
           </picture>
         </a>
         <div class="attr">
