@@ -60,9 +60,9 @@ ipfs bootstrap add /ip4/192.168.10.1/tcp/4001/ipfs/QmQVvZEmvjhYgsyEC7NvMn8EWf131
 exit
 ```
 
-If your device is behind NAT, configure port forwarding: https://docs.ipfs.io/how-to/nat-configuration/#port-forwarding.
+If you have problem sharing your content and your device is behind NAT, configure port forwarding: https://docs.ipfs.io/how-to/nat-configuration/#port-forwarding.
 
-The `graffiti-collection` container should now successfully retrieve the photos as blobs from IPFS into `data` folder, and they should be visible on the map.
+If issues still persist, refer to https://github.com/ipfs/go-ipfs/blob/master/docs/file-transfer.md#troubleshooting.
 
 ## Learn more
 
